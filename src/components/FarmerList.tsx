@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Banknote, Milk } from "lucide-react";
 
 const FarmerList = () => {
   const farmers = [
@@ -85,12 +86,25 @@ const FarmerList = () => {
                 
                 <div className="flex items-center space-x-6">
                   <div className="text-center">
+                    <div className="flex items-center justify-center mb-1">
+                      <Milk className="w-4 h-4 text-blue-600 mr-1" />
+                    </div>
                     <p className="text-2xl font-bold text-green-600">{farmer.todayMilk}L</p>
                     <p className="text-xs text-gray-600">Today</p>
                   </div>
                   <div className="text-center">
+                    <div className="flex items-center justify-center mb-1">
+                      <Milk className="w-4 h-4 text-blue-600 mr-1" />
+                    </div>
                     <p className="text-lg font-semibold text-gray-900">{farmer.monthlyTotal}L</p>
                     <p className="text-xs text-gray-600">This Month</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="flex items-center justify-center mb-1">
+                      <Banknote className="w-4 h-4 text-green-600 mr-1" />
+                    </div>
+                    <p className="text-lg font-semibold text-green-600">150,000 UGX</p>
+                    <p className="text-xs text-gray-600">Total Saving Amount</p>
                   </div>
                   <div className="text-center">
                     <Badge 
