@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import DashboardContent from "./DashboardContent";
@@ -12,6 +13,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 const MainLayout = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -162,6 +164,13 @@ const MainLayout = () => {
               <div className="mb-6">
                 <Carousel 
                   className="w-full max-w-4xl mx-auto"
+                  plugins={[
+                    Autoplay({
+                      delay: 3000,
+                      stopOnInteraction: false,
+                      stopOnMouseEnter: false,
+                    }),
+                  ]}
                   opts={{
                     align: "start",
                     loop: true,
@@ -174,7 +183,7 @@ const MainLayout = () => {
                           <img 
                             src={image.src}
                             alt={image.alt}
-                            className="w-full h-48 object-cover rounded-lg shadow-lg"
+                            className="w-full h-48 object-cover rounded-lg shadow-lg transition-transform duration-300 hover:scale-105"
                           />
                         </div>
                       </CarouselItem>
