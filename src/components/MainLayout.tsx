@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import DashboardContent from "./DashboardContent";
@@ -77,6 +76,15 @@ const MainLayout = () => {
       <main className="flex-1 p-6 overflow-auto">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6">
+            {activeTab === "farmers" && (
+              <div className="mb-6 text-center">
+                <img 
+                  src="https://images.unsplash.com/photo-1493962853295-0fd70327578a?w=600&h=300&fit=crop&crop=center" 
+                  alt="Milk processing and dairy farming" 
+                  className="w-full max-w-2xl mx-auto h-48 object-cover rounded-lg shadow-lg"
+                />
+              </div>
+            )}
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {activeTab === "dashboard" && "Dashboard Overview"}
               {activeTab === "farmers" && "Milk Analytics"}
