@@ -10,11 +10,11 @@ const MilkProductionChart = () => {
     { day: "Thu", production: 2550 },
     { day: "Fri", production: 2750 },
     { day: "Sat", production: 2900 },
-    { day: "Sun", population: 2847 },
+    { day: "Sun", production: 2847 },
   ];
 
   return (
-    <Card className="shadow-lg border-0">
+    <Card className="shadow-md border-0">
       <CardHeader>
         <CardTitle className="text-green-800">Weekly Milk Production</CardTitle>
       </CardHeader>
