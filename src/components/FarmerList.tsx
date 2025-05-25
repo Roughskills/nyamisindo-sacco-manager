@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Banknote, Milk } from "lucide-react";
+import { Banknote, Milk, Percent, DollarSign } from "lucide-react";
 
 const FarmerList = () => {
   const farmers = [
@@ -15,7 +15,9 @@ const FarmerList = () => {
       monthlyTotal: 720,
       status: "active",
       lastSubmission: "6:30 AM",
-      image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=150&h=150&fit=crop&crop=face"
+      image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=150&h=150&fit=crop&crop=face",
+      distributionScore: 92,
+      loanAmount: 500000
     },
     {
       id: 2,
@@ -25,7 +27,9 @@ const FarmerList = () => {
       monthlyTotal: 650,
       status: "pending",
       lastSubmission: "Yesterday",
-      image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=150&h=150&fit=crop&crop=face"
+      image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=150&h=150&fit=crop&crop=face",
+      distributionScore: 78,
+      loanAmount: 300000
     },
     {
       id: 3,
@@ -35,7 +39,9 @@ const FarmerList = () => {
       monthlyTotal: 580,
       status: "active",
       lastSubmission: "7:15 AM",
-      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=150&h=150&fit=crop&crop=face"
+      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=150&h=150&fit=crop&crop=face",
+      distributionScore: 85,
+      loanAmount: 200000
     },
     {
       id: 4,
@@ -45,7 +51,9 @@ const FarmerList = () => {
       monthlyTotal: 695,
       status: "active",
       lastSubmission: "6:45 AM",
-      image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=150&h=150&fit=crop&crop=face"
+      image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=150&h=150&fit=crop&crop=face",
+      distributionScore: 88,
+      loanAmount: 750000
     },
     {
       id: 5,
@@ -55,9 +63,19 @@ const FarmerList = () => {
       monthlyTotal: 445,
       status: "active",
       lastSubmission: "8:00 AM",
-      image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=150&h=150&fit=crop&crop=face"
+      image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=150&h=150&fit=crop&crop=face",
+      distributionScore: 73,
+      loanAmount: 150000
     }
   ];
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-UG', {
+      style: 'currency',
+      currency: 'UGX',
+      minimumFractionDigits: 0
+    }).format(amount);
+  };
 
   return (
     <div className="space-y-6">
@@ -105,6 +123,20 @@ const FarmerList = () => {
                     </div>
                     <p className="text-lg font-semibold text-green-600">150,000 UGX</p>
                     <p className="text-xs text-gray-600">Total Saving Amount</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="flex items-center justify-center mb-1">
+                      <Percent className="w-4 h-4 text-purple-600 mr-1" />
+                    </div>
+                    <p className="text-lg font-semibold text-purple-600">{farmer.distributionScore}%</p>
+                    <p className="text-xs text-gray-600">Distribution Score</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="flex items-center justify-center mb-1">
+                      <DollarSign className="w-4 h-4 text-orange-600 mr-1" />
+                    </div>
+                    <p className="text-lg font-semibold text-orange-600">{formatCurrency(farmer.loanAmount)}</p>
+                    <p className="text-xs text-gray-600">Loan Amount</p>
                   </div>
                   <div className="text-center">
                     <Badge 
