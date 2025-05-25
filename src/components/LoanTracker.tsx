@@ -57,9 +57,9 @@ const LoanTracker = () => {
   ];
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('rw-RW', {
+    return new Intl.NumberFormat('en-UG', {
       style: 'currency',
-      currency: 'RWF',
+      currency: 'UGX',
       minimumFractionDigits: 0
     }).format(amount);
   };

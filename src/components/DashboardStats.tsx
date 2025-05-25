@@ -18,7 +18,7 @@ const DashboardStats = () => {
       icon: "🥛"
     },
     {
-      title: "Total Revenue (RWF)",
+      title: "Total Revenue (UGX)",
       value: "569,400",
       change: "+8.1%",
       changeType: "positive",

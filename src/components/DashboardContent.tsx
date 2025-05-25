@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import MilkProductionChart from "./MilkProductionChart";
@@ -21,7 +20,7 @@ const DashboardContent = () => {
     },
     {
       title: "Total Revenue",
-      value: "RWF 1,284,000",
+      value: "UGX 1,284,000",
       change: "+8.1%",
       changeType: "positive",
       icon: "💰"
@@ -36,11 +35,11 @@ const DashboardContent = () => {
   ];
 
   const recentSubmissions = [
-    { id: 1, farmer: "John Muhire", amount: "25L", time: "06:30 AM", payment: "5,000 RWF" },
-    { id: 2, farmer: "Mary Uwimana", amount: "18L", time: "07:15 AM", payment: "3,600 RWF" },
-    { id: 3, farmer: "Peter Nkusi", amount: "32L", time: "07:45 AM", payment: "6,400 RWF" },
-    { id: 4, farmer: "Alice Mukamana", amount: "22L", time: "08:00 AM", payment: "4,400 RWF" },
-    { id: 5, farmer: "David Nzeyimana", amount: "28L", time: "08:15 AM", payment: "5,600 RWF" },
+    { id: 1, farmer: "John Muhire", amount: "25L", time: "06:30 AM", payment: "5,000 UGX" },
+    { id: 2, farmer: "Mary Uwimana", amount: "18L", time: "07:15 AM", payment: "3,600 UGX" },
+    { id: 3, farmer: "Peter Nkusi", amount: "32L", time: "07:45 AM", payment: "6,400 UGX" },
+    { id: 4, farmer: "Alice Mukamana", amount: "22L", time: "08:00 AM", payment: "4,400 UGX" },
+    { id: 5, farmer: "David Nzeyimana", amount: "28L", time: "08:15 AM", payment: "5,600 UGX" },
   ];
 
   return (
