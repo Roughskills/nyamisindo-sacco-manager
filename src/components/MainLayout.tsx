@@ -1,9 +1,9 @@
+
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import DashboardContent from "./DashboardContent";
 import FarmerList from "./FarmerList";
 import LoanTracker from "./LoanTracker";
-import MilkDistributionChart from "./MilkDistributionChart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -99,14 +99,7 @@ const MainLayout = () => {
       case "dashboard":
         return <DashboardContent />;
       case "farmers":
-        return (
-          <div>
-            <div className="mb-6">
-              <MilkDistributionChart />
-            </div>
-            <FarmerList />
-          </div>
-        );
+        return <FarmerList />;
       case "loans":
         return <LoanTracker />;
       case "payments":
@@ -166,7 +159,7 @@ const MainLayout = () => {
     <div 
       className="min-h-screen flex"
       style={{
-        backgroundImage: `url('/lovable-uploads/5ed5d582-509e-412c-aa4b-ff19eb8841ba.png')`,
+        backgroundImage: `url('/lovable-uploads/6fbac24b-5c2d-43f3-97b6-43646632e407.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'
@@ -210,9 +203,6 @@ const MainLayout = () => {
                 </Carousel>
               </div>
             )}
-            <div className="flex items-center gap-3 mb-4">
-              <MilkDistributionChart />
-            </div>
             <div className="flex items-center gap-3 mb-2">
               {activeTab === "farmers" && <Milk className="w-8 h-8 text-green-600" />}
               {activeTab === "dashboard" && <BarChart3 className="w-8 h-8 text-blue-600" />}
