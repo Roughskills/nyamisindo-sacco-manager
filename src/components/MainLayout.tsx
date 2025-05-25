@@ -167,7 +167,7 @@ const MainLayout = () => {
     <div 
       className="min-h-screen flex"
       style={{
-        backgroundImage: `url('/lovable-uploads/0a3dd6b0-5153-497f-8565-39c69eb6d3a3.png')`,
+        backgroundImage: `url('/lovable-uploads/5ed5d582-509e-412c-aa4b-ff19eb8841ba.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'
