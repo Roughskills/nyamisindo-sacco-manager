@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const FarmerList = () => {
   const farmers = [
@@ -13,7 +13,8 @@ const FarmerList = () => {
       todayMilk: 25,
       monthlyTotal: 720,
       status: "active",
-      lastSubmission: "6:30 AM"
+      lastSubmission: "6:30 AM",
+      image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=150&h=150&fit=crop&crop=face"
     },
     {
       id: 2,
@@ -22,7 +23,8 @@ const FarmerList = () => {
       todayMilk: 0,
       monthlyTotal: 650,
       status: "pending",
-      lastSubmission: "Yesterday"
+      lastSubmission: "Yesterday",
+      image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=150&h=150&fit=crop&crop=face"
     },
     {
       id: 3,
@@ -31,7 +33,8 @@ const FarmerList = () => {
       todayMilk: 18,
       monthlyTotal: 580,
       status: "active",
-      lastSubmission: "7:15 AM"
+      lastSubmission: "7:15 AM",
+      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=150&h=150&fit=crop&crop=face"
     },
     {
       id: 4,
@@ -40,7 +43,8 @@ const FarmerList = () => {
       todayMilk: 22,
       monthlyTotal: 695,
       status: "active",
-      lastSubmission: "6:45 AM"
+      lastSubmission: "6:45 AM",
+      image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=150&h=150&fit=crop&crop=face"
     },
     {
       id: 5,
@@ -49,7 +53,8 @@ const FarmerList = () => {
       todayMilk: 15,
       monthlyTotal: 445,
       status: "active",
-      lastSubmission: "8:00 AM"
+      lastSubmission: "8:00 AM",
+      image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=150&h=150&fit=crop&crop=face"
     }
   ];
 
@@ -67,6 +72,7 @@ const FarmerList = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <Avatar className="h-12 w-12">
+                    <AvatarImage src={farmer.image} alt={farmer.name} />
                     <AvatarFallback className="bg-green-100 text-green-800 font-semibold">
                       {farmer.name.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
