@@ -1,4 +1,5 @@
 
+
 interface LogoProps {
   size?: "sm" | "md" | "lg";
   showText?: boolean;
@@ -7,9 +8,9 @@ interface LogoProps {
 
 const Logo = ({ size = "md", showText = true, className = "" }: LogoProps) => {
   const sizeClasses = {
-    sm: "w-8 h-8",
-    md: "w-12 h-12", 
-    lg: "w-16 h-16"
+    sm: "w-12 h-12",
+    md: "w-20 h-20", 
+    lg: "w-28 h-28"
   };
 
   const textSizeClasses = {
@@ -19,7 +20,7 @@ const Logo = ({ size = "md", showText = true, className = "" }: LogoProps) => {
   };
 
   return (
-    <div className={`flex items-center space-x-3 ${className}`}>
+    <div className={`flex flex-col items-center space-y-2 ${className}`}>
       <div className={`${sizeClasses[size]} flex items-center justify-center`}>
         <img 
           src="/lovable-uploads/c3c35b27-65da-447e-b4b5-c13552afad33.png"
@@ -28,7 +29,7 @@ const Logo = ({ size = "md", showText = true, className = "" }: LogoProps) => {
         />
       </div>
       {showText && (
-        <div>
+        <div className="text-center">
           <h2 className={`font-bold text-gray-900 ${textSizeClasses[size]} leading-tight`}>
             Nyamisindo SACCO
           </h2>
@@ -40,3 +41,4 @@ const Logo = ({ size = "md", showText = true, className = "" }: LogoProps) => {
 };
 
 export default Logo;
+
