@@ -95,7 +95,7 @@ const LoanTracker = () => {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-gray-900">23</div>
-            <p className="text-sm text-gray-600">Worth 15.2M RWF</p>
+            <p className="text-sm text-gray-600">Worth 15.2M UGX</p>
           </CardContent>
         </Card>
         
@@ -105,7 +105,7 @@ const LoanTracker = () => {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-gray-900">1.8M</div>
-            <p className="text-sm text-gray-600">RWF collected</p>
+            <p className="text-sm text-gray-600">UGX collected</p>
           </CardContent>
         </Card>
         
