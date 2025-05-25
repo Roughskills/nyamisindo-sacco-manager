@@ -1,9 +1,9 @@
-
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import DashboardContent from "./DashboardContent";
 import FarmerList from "./FarmerList";
 import LoanTracker from "./LoanTracker";
+import MilkDistributionChart from "./MilkDistributionChart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -99,7 +99,12 @@ const MainLayout = () => {
       case "dashboard":
         return <DashboardContent />;
       case "farmers":
-        return <FarmerList />;
+        return (
+          <div>
+            <FarmerList />
+            <MilkDistributionChart />
+          </div>
+        );
       case "loans":
         return <LoanTracker />;
       case "payments":
