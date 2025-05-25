@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
+import Logo from "./Logo";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -29,14 +30,11 @@ const LoginPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-2xl border-0">
         <CardHeader className="text-center pb-8">
-          <div className="mx-auto mb-4 bg-green-600 text-white p-4 rounded-full w-16 h-16 flex items-center justify-center">
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5a2 2 0 012-2h4a2 2 0 012 2v0H8v0z" />
-            </svg>
+          <div className="flex justify-center mb-4">
+            <Logo size="lg" />
           </div>
-          <CardTitle className="text-2xl font-bold text-gray-900">Nyamisindo SACCO</CardTitle>
-          <p className="text-gray-600">Dairy Cooperative Management</p>
+          <CardTitle className="text-2xl font-bold text-gray-900">Welcome Back</CardTitle>
+          <p className="text-gray-600">Sign in to manage your cooperative</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
