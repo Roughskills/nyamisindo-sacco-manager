@@ -101,11 +101,15 @@ const MainLayout = () => {
         return <DashboardContent />;
       case "farmers":
         return (
-          <div>
-            <div className="mb-6">
-              <MilkDistributionChart />
+          <div className="flex gap-6">
+            <div className="flex-1">
+              <FarmerList />
             </div>
-            <FarmerList />
+            <div className="w-96">
+              <div className="scale-75 origin-top">
+                <MilkDistributionChart />
+              </div>
+            </div>
           </div>
         );
       case "loans":
