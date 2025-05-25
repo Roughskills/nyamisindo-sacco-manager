@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import DashboardContent from "./DashboardContent";
@@ -16,6 +15,7 @@ import {
 } from "@/components/ui/carousel";
 import { BarChart3, Users, Milk } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
+import Chart3D from "./Chart3D";
 
 const MainLayout = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -105,9 +105,12 @@ const MainLayout = () => {
             <div className="flex-1">
               <FarmerList />
             </div>
-            <div className="w-96">
+            <div className="flex flex-col gap-4 w-96">
               <div className="scale-75 origin-top">
                 <MilkDistributionChart />
+              </div>
+              <div className="scale-75 origin-top">
+                <Chart3D />
               </div>
             </div>
           </div>
