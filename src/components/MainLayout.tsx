@@ -102,7 +102,9 @@ const MainLayout = () => {
       case "farmers":
         return (
           <div>
-            <MilkDistributionChart />
+            <div className="mb-6">
+              <MilkDistributionChart />
+            </div>
             <FarmerList />
           </div>
         );

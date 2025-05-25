@@ -31,7 +31,7 @@ const MilkDistributionChart = () => {
         fill="white" 
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
-        fontSize={12}
+        fontSize={10}
         fontWeight="bold"
       >
         {`${(percent * 100).toFixed(0)}%`}
@@ -40,11 +40,11 @@ const MilkDistributionChart = () => {
   };
 
   return (
-    <Card className="shadow-lg border-0 mt-6">
-      <CardHeader>
+    <Card className="shadow-lg border-0 max-w-2xl mx-auto">
+      <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-green-800 flex items-center gap-2">
-            <PieChartIcon className="w-6 h-6" />
+          <CardTitle className="text-green-800 flex items-center gap-2 text-lg">
+            <PieChartIcon className="w-5 h-5" />
             Monthly Milk Distribution (Liters)
           </CardTitle>
           <div className="flex gap-2">
@@ -52,25 +52,25 @@ const MilkDistributionChart = () => {
               variant={chartType === 'pie' ? 'default' : 'outline'}
               size="sm"
               onClick={() => setChartType('pie')}
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 text-xs px-2 py-1"
             >
-              <PieChartIcon className="w-4 h-4" />
-              3D Pie
+              <PieChartIcon className="w-3 h-3" />
+              Pie
             </Button>
             <Button
               variant={chartType === 'bar' ? 'default' : 'outline'}
               size="sm"
               onClick={() => setChartType('bar')}
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 text-xs px-2 py-1"
             >
-              <BarChart3 className="w-4 h-4" />
-              3D Bar
+              <BarChart3 className="w-3 h-3" />
+              Bar
             </Button>
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="h-96">
+      <CardContent className="pt-0">
+        <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             {chartType === 'pie' ? (
               <PieChart>
@@ -80,13 +80,13 @@ const MilkDistributionChart = () => {
                   cy="50%"
                   labelLine={false}
                   label={renderCustomizedLabel}
-                  outerRadius={120}
+                  outerRadius={80}
                   fill="#8884d8"
                   dataKey="milk"
                   stroke="#fff"
                   strokeWidth={2}
                   style={{
-                    filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.3))',
+                    filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.2))',
                   }}
                 >
                   {distributionData.map((entry, index) => (
@@ -99,29 +99,30 @@ const MilkDistributionChart = () => {
                     backgroundColor: 'rgba(255, 255, 255, 0.95)',
                     border: '1px solid #ccc',
                     borderRadius: '8px',
-                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    fontSize: '12px'
                   }}
                 />
                 <Legend 
                   verticalAlign="bottom" 
-                  height={36}
-                  formatter={(value) => <span style={{ color: '#374151' }}>{value}</span>}
+                  height={24}
+                  formatter={(value) => <span style={{ color: '#374151', fontSize: '12px' }}>{value}</span>}
                 />
               </PieChart>
             ) : (
-              <BarChart data={distributionData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+              <BarChart data={distributionData} margin={{ top: 10, right: 15, left: 10, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e0e7ff" />
                 <XAxis 
                   dataKey="name" 
                   angle={-45}
                   textAnchor="end"
-                  height={80}
-                  fontSize={12}
+                  height={60}
+                  fontSize={10}
                   stroke="#6b7280"
                 />
                 <YAxis 
-                  label={{ value: 'Milk (Liters)', angle: -90, position: 'insideLeft' }}
-                  fontSize={12}
+                  label={{ value: 'Milk (L)', angle: -90, position: 'insideLeft', style: { fontSize: '10px' } }}
+                  fontSize={10}
                   stroke="#6b7280"
                 />
                 <Tooltip 
@@ -130,7 +131,8 @@ const MilkDistributionChart = () => {
                     backgroundColor: 'rgba(255, 255, 255, 0.95)',
                     border: '1px solid #ccc',
                     borderRadius: '8px',
-                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    fontSize: '12px'
                   }}
                 />
                 <Bar 
@@ -139,22 +141,22 @@ const MilkDistributionChart = () => {
                   stroke="#065f46"
                   strokeWidth={1}
                   style={{
-                    filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.2))',
+                    filter: 'drop-shadow(1px 1px 2px rgba(0,0,0,0.2))',
                   }}
-                  radius={[4, 4, 0, 0]}
+                  radius={[3, 3, 0, 0]}
                 />
               </BarChart>
             )}
           </ResponsiveContainer>
         </div>
-        <div className="mt-4 grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+        <div className="mt-3 grid grid-cols-2 md:grid-cols-5 gap-2 text-center">
           {distributionData.map((farmer, index) => (
-            <div key={index} className="p-3 bg-gray-50 rounded-lg">
+            <div key={index} className="p-2 bg-gray-50 rounded-lg">
               <div 
-                className="w-4 h-4 rounded-full mx-auto mb-2"
+                className="w-3 h-3 rounded-full mx-auto mb-1"
                 style={{ backgroundColor: farmer.fill }}
               ></div>
-              <p className="text-sm font-medium text-gray-900">{farmer.name.split(' ')[0]}</p>
+              <p className="text-xs font-medium text-gray-900">{farmer.name.split(' ')[0]}</p>
               <p className="text-xs text-gray-600">{farmer.milk}L</p>
             </div>
           ))}
