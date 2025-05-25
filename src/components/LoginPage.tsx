@@ -27,7 +27,15 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
+    <div 
+      className="min-h-screen flex items-center justify-center p-4"
+      style={{
+        backgroundImage: `url('/lovable-uploads/e56bf01c-a068-4328-974a-931ed9361461.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
       <Card className="w-full max-w-md shadow-2xl border-0">
         <CardHeader className="text-center pb-8">
           <div className="flex justify-center mb-4">

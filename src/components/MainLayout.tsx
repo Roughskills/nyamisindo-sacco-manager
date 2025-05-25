@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import DashboardContent from "./DashboardContent";
@@ -164,7 +163,15 @@ const MainLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex">
+    <div 
+      className="min-h-screen flex"
+      style={{
+        backgroundImage: `url('/lovable-uploads/e56bf01c-a068-4328-974a-931ed9361461.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       <main className="flex-1 p-6 overflow-auto">
         <div className="max-w-7xl mx-auto">
@@ -203,6 +210,9 @@ const MainLayout = () => {
                 </Carousel>
               </div>
             )}
+            <div className="flex items-center gap-3 mb-4">
+              <MilkDistributionChart />
+            </div>
             <div className="flex items-center gap-3 mb-2">
               {activeTab === "farmers" && <Milk className="w-8 h-8 text-green-600" />}
               {activeTab === "dashboard" && <BarChart3 className="w-8 h-8 text-blue-600" />}
