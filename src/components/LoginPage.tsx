@@ -33,7 +33,7 @@ const LoginPage = () => {
           <div className="flex justify-center mb-4">
             <Logo size="lg" />
           </div>
-          <CardTitle className="text-2xl font-bold text-gray-900">Welcome Back</CardTitle>
+          <CardTitle className="text-2xl font-bold text-gray-900">Login</CardTitle>
           <p className="text-gray-600">Sign in to manage your cooperative</p>
         </CardHeader>
         <CardContent>
