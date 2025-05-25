@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Banknote, Milk, Percent, DollarSign } from "lucide-react";
+import { Banknote, Milk, Percent, DollarSign, Users, MapPin, Square } from "lucide-react";
 
 const FarmerList = () => {
   const farmers = [
@@ -11,6 +11,8 @@ const FarmerList = () => {
       id: 1,
       name: "John Muhire",
       phone: "+250 788 123 456",
+      location: "Kigali, Gasabo District",
+      farmArea: "2.5 hectares (25,000 m²)",
       todayMilk: 25,
       monthlyTotal: 720,
       status: "active",
@@ -23,6 +25,8 @@ const FarmerList = () => {
       id: 2,
       name: "Mary Uwimana",
       phone: "+250 788 234 567",
+      location: "Nyagatare, Eastern Province",
+      farmArea: "1.8 hectares (18,000 m²)",
       todayMilk: 0,
       monthlyTotal: 650,
       status: "pending",
@@ -35,6 +39,8 @@ const FarmerList = () => {
       id: 3,
       name: "Peter Nkusi",
       phone: "+250 788 345 678",
+      location: "Muhanga, Southern Province",
+      farmArea: "3.2 hectares (32,000 m²)",
       todayMilk: 18,
       monthlyTotal: 580,
       status: "active",
@@ -47,6 +53,8 @@ const FarmerList = () => {
       id: 4,
       name: "Grace Mukamana",
       phone: "+250 788 456 789",
+      location: "Musanze, Northern Province",
+      farmArea: "2.1 hectares (21,000 m²)",
       todayMilk: 22,
       monthlyTotal: 695,
       status: "active",
@@ -59,6 +67,8 @@ const FarmerList = () => {
       id: 5,
       name: "David Kayitare",
       phone: "+250 788 567 890",
+      location: "Rwamagana, Eastern Province",
+      farmArea: "1.5 hectares (15,000 m²)",
       todayMilk: 15,
       monthlyTotal: 445,
       status: "active",
@@ -80,7 +90,10 @@ const FarmerList = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900">Farmer Management</h2>
+        <div className="flex items-center gap-3">
+          <Users className="w-8 h-8 text-green-600" />
+          <h2 className="text-2xl font-bold text-gray-900">Farmer Management</h2>
+        </div>
         <Button className="bg-green-600 hover:bg-green-700">Add New Farmer</Button>
       </div>
       
@@ -99,6 +112,14 @@ const FarmerList = () => {
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">{farmer.name}</h3>
                     <p className="text-sm text-gray-600">{farmer.phone}</p>
+                    <div className="flex items-center gap-1 mt-1">
+                      <MapPin className="w-3 h-3 text-blue-500" />
+                      <p className="text-xs text-gray-600">{farmer.location}</p>
+                    </div>
+                    <div className="flex items-center gap-1 mt-1">
+                      <Square className="w-3 h-3 text-green-500" />
+                      <p className="text-xs text-gray-600">{farmer.farmArea}</p>
+                    </div>
                   </div>
                 </div>
                 

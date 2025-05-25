@@ -13,6 +13,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { BarChart3, Users } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
 
 const MainLayout = () => {
@@ -194,14 +195,22 @@ const MainLayout = () => {
                 </Carousel>
               </div>
             )}
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {activeTab === "dashboard" && "Dashboard Overview"}
-              {activeTab === "farmers" && "Milk Analytics"}
-              {activeTab === "loans" && "Loan Applications"}
-              {activeTab === "payments" && "Payment Management"}
-              {activeTab === "members" && "Member Management"}
-              {activeTab === "settings" && "System Settings"}
-            </h1>
+            <div className="flex items-center gap-3 mb-2">
+              {activeTab === "farmers" && <BarChart3 className="w-8 h-8 text-green-600" />}
+              {activeTab === "dashboard" && <BarChart3 className="w-8 h-8 text-blue-600" />}
+              {activeTab === "loans" && <Users className="w-8 h-8 text-purple-600" />}
+              {activeTab === "payments" && <Users className="w-8 h-8 text-orange-600" />}
+              {activeTab === "members" && <Users className="w-8 h-8 text-green-600" />}
+              {activeTab === "settings" && <Users className="w-8 h-8 text-gray-600" />}
+              <h1 className="text-3xl font-bold text-gray-900">
+                {activeTab === "dashboard" && "Dashboard Overview"}
+                {activeTab === "farmers" && "Milk Analytics"}
+                {activeTab === "loans" && "Loan Applications"}
+                {activeTab === "payments" && "Payment Management"}
+                {activeTab === "members" && "Member Management"}
+                {activeTab === "settings" && "System Settings"}
+              </h1>
+            </div>
             <p className="text-gray-600">
               {activeTab === "dashboard" && "Monitor your cooperative's performance and activities"}
               {activeTab === "farmers" && "Track farmer submissions and milk production analytics"}
