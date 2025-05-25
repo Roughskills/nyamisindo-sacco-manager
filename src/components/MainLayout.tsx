@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import DashboardContent from "./DashboardContent";
@@ -13,7 +14,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { BarChart3, Users } from "lucide-react";
+import { BarChart3, Users, Milk } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
 
 const MainLayout = () => {
@@ -101,8 +102,8 @@ const MainLayout = () => {
       case "farmers":
         return (
           <div>
-            <FarmerList />
             <MilkDistributionChart />
+            <FarmerList />
           </div>
         );
       case "loans":
@@ -201,7 +202,7 @@ const MainLayout = () => {
               </div>
             )}
             <div className="flex items-center gap-3 mb-2">
-              {activeTab === "farmers" && <BarChart3 className="w-8 h-8 text-green-600" />}
+              {activeTab === "farmers" && <Milk className="w-8 h-8 text-green-600" />}
               {activeTab === "dashboard" && <BarChart3 className="w-8 h-8 text-blue-600" />}
               {activeTab === "loans" && <Users className="w-8 h-8 text-purple-600" />}
               {activeTab === "payments" && <Users className="w-8 h-8 text-orange-600" />}
