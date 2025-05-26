@@ -229,8 +229,12 @@ const PaymentManagement = () => {
                     onClick={() => setPaymentMethod('airtel')}
                   >
                     <CardContent className="p-4 text-center">
-                      <div className="w-16 h-16 mx-auto mb-2 bg-red-600 rounded-lg flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">A</span>
+                      <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center">
+                        <img 
+                          src="/lovable-uploads/c09eb5a0-bc8a-48bf-a0bb-906aebc779a6.png" 
+                          alt="Airtel Money" 
+                          className="w-full h-full object-contain"
+                        />
                       </div>
                       <h3 className="font-semibold text-red-600">Airtel Money</h3>
                       <p className="text-sm text-gray-600">Mobile payment</p>
@@ -244,8 +248,12 @@ const PaymentManagement = () => {
                     onClick={() => setPaymentMethod('mtn')}
                   >
                     <CardContent className="p-4 text-center">
-                      <div className="w-16 h-16 mx-auto mb-2 bg-yellow-500 rounded-lg flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">MTN</span>
+                      <div className="w-16 h-16 mx-auto mb-2 flex items-center justify-center">
+                        <img 
+                          src="/lovable-uploads/02ac8073-82cb-4474-8cb0-65b4acf18188.png" 
+                          alt="MTN Mobile Money" 
+                          className="w-full h-full object-contain"
+                        />
                       </div>
                       <h3 className="font-semibold text-yellow-600">MTN Mobile Money</h3>
                       <p className="text-sm text-gray-600">Mobile payment</p>
