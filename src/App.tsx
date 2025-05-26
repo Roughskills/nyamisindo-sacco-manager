@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import LoginPage from "@/components/LoginPage";
 import MainLayout from "@/components/MainLayout";
+import AddFarmerPage from "@/components/AddFarmerPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const AppContent = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainLayout />} />
+        <Route path="/add-farmer" element={<AddFarmerPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

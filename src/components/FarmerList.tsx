@@ -1,11 +1,13 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Banknote, Milk, Percent, DollarSign, Users, MapPin, Square } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const FarmerList = () => {
+  const navigate = useNavigate();
+
   const farmers = [
     {
       id: 1,
@@ -94,7 +96,12 @@ const FarmerList = () => {
           <Users className="w-8 h-8 text-green-600" />
           <h2 className="text-2xl font-bold text-gray-900">Farmer Management</h2>
         </div>
-        <Button className="bg-green-600 hover:bg-green-700">Add New Farmer</Button>
+        <Button 
+          className="bg-green-600 hover:bg-green-700"
+          onClick={() => navigate('/add-farmer')}
+        >
+          Add New Farmer
+        </Button>
       </div>
       
       <div className="grid gap-4">
