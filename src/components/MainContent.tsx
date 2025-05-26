@@ -1,10 +1,10 @@
-
 import DashboardContent from "./DashboardContent";
 import FarmerList from "./FarmerList";
 import LoanTracker from "./LoanTracker";
 import MilkDistributionChart from "./MilkDistributionChart";
 import Chart3D from "./Chart3D";
 import PlaceholderCard from "./PlaceholderCard";
+import MembersPage from "./MembersPage";
 
 interface MainContentProps {
   activeTab: string;
@@ -46,14 +46,7 @@ const MainContent = ({ activeTab }: MainContentProps) => {
       );
     
     case "members":
-      return (
-        <PlaceholderCard
-          title="Member Management"
-          description="Manage cooperative members"
-          featureName="Member Management"
-          buttonText="Manage Members"
-        />
-      );
+      return <MembersPage />;
     
     case "account":
       return (
