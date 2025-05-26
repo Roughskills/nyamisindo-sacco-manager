@@ -1,9 +1,8 @@
-
 import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Upload, Camera, FileText, CheckCircle2, AlertCircle, Scan, Eye } from "lucide-react";
+import { Upload, Camera, FileText, CheckCircle2, AlertCircle, Scan, Eye, Shield } from "lucide-react";
 
 interface IDVerificationProps {
   onComplete: (data: any) => void;
@@ -282,6 +281,7 @@ const IDVerification = ({ onComplete, data }: IDVerificationProps) => {
                 <li>• Glare or reflections</li>
                 <li>• Covering any text</li>
                 <li>• Damaged documents</li>
+                <li>• Screenshots or copies</li>
                 <li>• Screenshots or copies</li>
               </ul>
             </div>
