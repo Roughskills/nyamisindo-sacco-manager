@@ -1,297 +1,52 @@
 
 import { useState } from "react";
-import Sidebar from "./Sidebar";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { 
-  UserPlus, 
-  User, 
-  Phone, 
-  MapPin, 
-  Milk, 
-  Square,
-  Upload,
-  Save,
-  ArrowLeft
-} from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ArrowLeft, UserPlus } from "lucide-react";
+import Sidebar from "./Sidebar";
 
 const AddFarmerPage = () => {
-  const [activeTab, setActiveTab] = useState("registration");
-  const { user } = useAuth();
-
-  const [farmerData, setFarmerData] = useState({
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
     name: "",
     phone: "",
+    email: "",
+    nationalId: "",
     location: "",
+    district: "",
+    sector: "",
+    cell: "",
+    village: "",
     farmArea: "",
-    farmAreaUnit: "hectares",
-    expectedDailyMilk: "",
-    photo: null as File | null
+    cattleCount: "",
+    milkCapacity: "",
+    farmingExperience: "",
+    cooperativeMember: "",
+    bankAccount: "",
+    nextOfKin: "",
+    nextOfKinPhone: "",
+    emergencyContact: "",
+    notes: ""
   });
 
   const handleInputChange = (field: string, value: string) => {
-    setFarmerData(prev => ({
+    setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
 
-  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setFarmerData(prev => ({
-        ...prev,
-        photo: file
-      }));
-    }
-  };
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    console.log("Farmer data:", farmerData);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Farmer registration data:", formData);
     // Here you would typically send the data to your backend
     alert("Farmer registered successfully!");
-  };
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case "registration":
-        return (
-          <div className="space-y-6">
-            <div className="flex items-center gap-3 mb-6">
-              <Button 
-                variant="ghost" 
-                onClick={() => window.history.back()}
-                className="flex items-center gap-2"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Farmers
-              </Button>
-            </div>
-
-            <Card className="shadow-lg border-0">
-              <CardHeader>
-                <CardTitle className="text-green-800 flex items-center gap-3">
-                  <UserPlus className="w-6 h-6" />
-                  Add New Farmer
-                </CardTitle>
-                <CardDescription>
-                  Register a new farmer to the cooperative system
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Photo Upload Section */}
-                  <div className="flex flex-col items-center space-y-4">
-                    <div className="relative">
-                      <Avatar className="h-24 w-24">
-                        <AvatarFallback className="bg-green-100 text-green-800 text-2xl">
-                          {farmerData.name ? farmerData.name.charAt(0).toUpperCase() : <User className="w-8 h-8" />}
-                        </AvatarFallback>
-                      </Avatar>
-                      <input
-                        type="file"
-                        id="photo-upload"
-                        accept="image/*"
-                        onChange={handlePhotoUpload}
-                        className="hidden"
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        className="absolute -bottom-2 -right-2 rounded-full p-2"
-                        onClick={() => document.getElementById('photo-upload')?.click()}
-                      >
-                        <Upload className="w-4 h-4" />
-                      </Button>
-                    </div>
-                    <p className="text-sm text-gray-600">Upload farmer photo</p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Personal Information */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                        <User className="w-5 h-5 text-green-600" />
-                        Personal Information
-                      </h3>
-                      
-                      <div>
-                        <Label htmlFor="name">Full Name *</Label>
-                        <Input
-                          id="name"
-                          type="text"
-                          value={farmerData.name}
-                          onChange={(e) => handleInputChange("name", e.target.value)}
-                          placeholder="Enter farmer's full name"
-                          required
-                          className="mt-1"
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="phone">Phone Number *</Label>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          value={farmerData.phone}
-                          onChange={(e) => handleInputChange("phone", e.target.value)}
-                          placeholder="+250 788 123 456"
-                          required
-                          className="mt-1"
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="location">Location *</Label>
-                        <Input
-                          id="location"
-                          type="text"
-                          value={farmerData.location}
-                          onChange={(e) => handleInputChange("location", e.target.value)}
-                          placeholder="District, Province"
-                          required
-                          className="mt-1"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Farm Information */}
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                        <Square className="w-5 h-5 text-green-600" />
-                        Farm Information
-                      </h3>
-
-                      <div>
-                        <Label htmlFor="farmArea">Farm Area *</Label>
-                        <div className="flex gap-2 mt-1">
-                          <Input
-                            id="farmArea"
-                            type="number"
-                            step="0.1"
-                            value={farmerData.farmArea}
-                            onChange={(e) => handleInputChange("farmArea", e.target.value)}
-                            placeholder="2.5"
-                            required
-                            className="flex-1"
-                          />
-                          <select
-                            value={farmerData.farmAreaUnit}
-                            onChange={(e) => handleInputChange("farmAreaUnit", e.target.value)}
-                            className="px-3 py-2 border border-gray-300 rounded-md bg-white"
-                          >
-                            <option value="hectares">Hectares</option>
-                            <option value="acres">Acres</option>
-                            <option value="square_meters">Square Meters</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="expectedDailyMilk">Expected Daily Milk Production *</Label>
-                        <div className="flex gap-2 mt-1">
-                          <Input
-                            id="expectedDailyMilk"
-                            type="number"
-                            step="0.1"
-                            value={farmerData.expectedDailyMilk}
-                            onChange={(e) => handleInputChange("expectedDailyMilk", e.target.value)}
-                            placeholder="25"
-                            required
-                            className="flex-1"
-                          />
-                          <span className="flex items-center px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-700">
-                            Liters
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Additional Information */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                      <Milk className="w-5 h-5 text-green-600" />
-                      Additional Details
-                    </h3>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div>
-                        <Label htmlFor="cowCount">Number of Cows</Label>
-                        <Input
-                          id="cowCount"
-                          type="number"
-                          placeholder="5"
-                          className="mt-1"
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="experience">Years of Experience</Label>
-                        <Input
-                          id="experience"
-                          type="number"
-                          placeholder="10"
-                          className="mt-1"
-                        />
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="cooperativeId">Cooperative ID</Label>
-                        <Input
-                          id="cooperativeId"
-                          type="text"
-                          placeholder="COOP-2024-001"
-                          className="mt-1"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Submit Button */}
-                  <div className="flex justify-end space-x-4 pt-6 border-t">
-                    <Button 
-                      type="button" 
-                      variant="outline"
-                      onClick={() => window.history.back()}
-                    >
-                      Cancel
-                    </Button>
-                    <Button 
-                      type="submit" 
-                      className="bg-green-600 hover:bg-green-700 flex items-center gap-2"
-                    >
-                      <Save className="w-4 h-4" />
-                      Register Farmer
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-        );
-      
-      default:
-        return (
-          <Card className="shadow-lg border-0">
-            <CardHeader>
-              <CardTitle className="text-green-800">Coming Soon</CardTitle>
-              <CardDescription>This feature is under development</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-12">
-                <p className="text-gray-600">This section will be available soon</p>
-              </div>
-            </CardContent>
-          </Card>
-        );
-    }
+    navigate("/");
   };
 
   return (
@@ -304,17 +59,261 @@ const AddFarmerPage = () => {
         backgroundRepeat: 'no-repeat'
       }}
     >
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Sidebar activeTab="farmers" setActiveTab={() => {}} />
       <main className="flex-1 p-6 overflow-auto">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <div className="mb-6">
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate("/")}
+              className="mb-4 text-gray-600 hover:text-gray-900"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Milk Analytics
+            </Button>
+            
             <div className="flex items-center gap-3 mb-2">
               <UserPlus className="w-8 h-8 text-green-600" />
               <h1 className="text-3xl font-bold text-gray-900">Add New Farmer</h1>
             </div>
-            <p className="text-gray-600">Register a new farmer to join the cooperative</p>
+            <p className="text-gray-600">Register a new farmer to the cooperative system</p>
           </div>
-          {renderContent()}
+
+          <Card className="shadow-lg border-0">
+            <CardHeader>
+              <CardTitle className="text-green-800">Farmer Registration Form</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Personal Information */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Full Name *</Label>
+                    <Input
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => handleInputChange("name", e.target.value)}
+                      placeholder="Enter farmer's full name"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone Number *</Label>
+                    <Input
+                      id="phone"
+                      value={formData.phone}
+                      onChange={(e) => handleInputChange("phone", e.target.value)}
+                      placeholder="+250 788 123 456"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email Address</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange("email", e.target.value)}
+                      placeholder="farmer@example.com"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="nationalId">National ID *</Label>
+                    <Input
+                      id="nationalId"
+                      value={formData.nationalId}
+                      onChange={(e) => handleInputChange("nationalId", e.target.value)}
+                      placeholder="1234567890123456"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Location Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Location Details</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="location">General Location *</Label>
+                      <Input
+                        id="location"
+                        value={formData.location}
+                        onChange={(e) => handleInputChange("location", e.target.value)}
+                        placeholder="Kigali, Gasabo District"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="district">District *</Label>
+                      <Select value={formData.district} onValueChange={(value) => handleInputChange("district", value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select district" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="gasabo">Gasabo</SelectItem>
+                          <SelectItem value="nyarugenge">Nyarugenge</SelectItem>
+                          <SelectItem value="kicukiro">Kicukiro</SelectItem>
+                          <SelectItem value="nyagatare">Nyagatare</SelectItem>
+                          <SelectItem value="muhanga">Muhanga</SelectItem>
+                          <SelectItem value="musanze">Musanze</SelectItem>
+                          <SelectItem value="rwamagana">Rwamagana</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="sector">Sector</Label>
+                      <Input
+                        id="sector"
+                        value={formData.sector}
+                        onChange={(e) => handleInputChange("sector", e.target.value)}
+                        placeholder="Enter sector"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="cell">Cell</Label>
+                      <Input
+                        id="cell"
+                        value={formData.cell}
+                        onChange={(e) => handleInputChange("cell", e.target.value)}
+                        placeholder="Enter cell"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="village">Village</Label>
+                      <Input
+                        id="village"
+                        value={formData.village}
+                        onChange={(e) => handleInputChange("village", e.target.value)}
+                        placeholder="Enter village"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Farm Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Farm Details</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="farmArea">Farm Area (hectares) *</Label>
+                      <Input
+                        id="farmArea"
+                        value={formData.farmArea}
+                        onChange={(e) => handleInputChange("farmArea", e.target.value)}
+                        placeholder="2.5"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="cattleCount">Number of Cattle *</Label>
+                      <Input
+                        id="cattleCount"
+                        type="number"
+                        value={formData.cattleCount}
+                        onChange={(e) => handleInputChange("cattleCount", e.target.value)}
+                        placeholder="15"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="milkCapacity">Daily Milk Capacity (Liters)</Label>
+                      <Input
+                        id="milkCapacity"
+                        type="number"
+                        value={formData.milkCapacity}
+                        onChange={(e) => handleInputChange("milkCapacity", e.target.value)}
+                        placeholder="25"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="farmingExperience">Farming Experience (Years)</Label>
+                      <Input
+                        id="farmingExperience"
+                        type="number"
+                        value={formData.farmingExperience}
+                        onChange={(e) => handleInputChange("farmingExperience", e.target.value)}
+                        placeholder="10"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Additional Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Additional Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="cooperativeMember">Previous Cooperative Member</Label>
+                      <Select value={formData.cooperativeMember} onValueChange={(value) => handleInputChange("cooperativeMember", value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select option" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="yes">Yes</SelectItem>
+                          <SelectItem value="no">No</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="bankAccount">Bank Account Number</Label>
+                      <Input
+                        id="bankAccount"
+                        value={formData.bankAccount}
+                        onChange={(e) => handleInputChange("bankAccount", e.target.value)}
+                        placeholder="Account number"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="nextOfKin">Next of Kin</Label>
+                      <Input
+                        id="nextOfKin"
+                        value={formData.nextOfKin}
+                        onChange={(e) => handleInputChange("nextOfKin", e.target.value)}
+                        placeholder="Next of kin name"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="nextOfKinPhone">Next of Kin Phone</Label>
+                      <Input
+                        id="nextOfKinPhone"
+                        value={formData.nextOfKinPhone}
+                        onChange={(e) => handleInputChange("nextOfKinPhone", e.target.value)}
+                        placeholder="+250 788 123 456"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="emergencyContact">Emergency Contact</Label>
+                      <Input
+                        id="emergencyContact"
+                        value={formData.emergencyContact}
+                        onChange={(e) => handleInputChange("emergencyContact", e.target.value)}
+                        placeholder="Emergency contact"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="notes">Additional Notes</Label>
+                    <Textarea
+                      id="notes"
+                      value={formData.notes}
+                      onChange={(e) => handleInputChange("notes", e.target.value)}
+                      placeholder="Any additional information about the farmer..."
+                      rows={3}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-4 pt-6">
+                  <Button type="submit" className="bg-green-600 hover:bg-green-700 flex-1">
+                    Register Farmer
+                  </Button>
+                  <Button type="button" variant="outline" onClick={() => navigate("/")} className="flex-1">
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
         </div>
       </main>
     </div>
