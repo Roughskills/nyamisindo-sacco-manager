@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,7 +20,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const AddFarmerPage = () => {
-  const [activeTab, setActiveTab] = useState("farmers"); // Keep it on farmers/milk analytics
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -73,7 +71,7 @@ const AddFarmerPage = () => {
         backgroundRepeat: 'no-repeat'
       }}
     >
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Sidebar activeTab="farmers" setActiveTab={() => {}} />
       <main className="flex-1 p-6 overflow-auto">
         <div className="max-w-6xl mx-auto">
           <div className="mb-6">
