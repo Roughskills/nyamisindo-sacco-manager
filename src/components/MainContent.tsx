@@ -1,4 +1,3 @@
-
 import DashboardContent from "./DashboardContent";
 import FarmerList from "./FarmerList";
 import LoanTracker from "./LoanTracker";
@@ -7,6 +6,7 @@ import Chart3D from "./Chart3D";
 import PlaceholderCard from "./PlaceholderCard";
 import MembersPage from "./MembersPage";
 import AccountManagementPage from "./AccountManagementPage";
+import PaymentManagement from "./PaymentManagement";
 
 interface MainContentProps {
   activeTab: string;
@@ -38,14 +38,7 @@ const MainContent = ({ activeTab }: MainContentProps) => {
       return <LoanTracker />;
     
     case "payments":
-      return (
-        <PlaceholderCard
-          title="Payment Management"
-          description="Track and process farmer payments"
-          featureName="Payment Processing"
-          buttonText="Configure Payments"
-        />
-      );
+      return <PaymentManagement />;
     
     case "members":
       return <MembersPage />;
