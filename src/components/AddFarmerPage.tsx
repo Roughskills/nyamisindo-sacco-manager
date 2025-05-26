@@ -18,12 +18,10 @@ import {
   ArrowLeft
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 
 const AddFarmerPage = () => {
-  const [activeTab, setActiveTab] = useState("farmers"); // Keep it on farmers/milk analytics
+  const [activeTab, setActiveTab] = useState("registration");
   const { user } = useAuth();
-  const navigate = useNavigate();
 
   const [farmerData, setFarmerData] = useState({
     name: "",
@@ -59,40 +57,19 @@ const AddFarmerPage = () => {
     alert("Farmer registered successfully!");
   };
 
-  const handleBackToFarmers = () => {
-    navigate("/");
-  };
-
-  return (
-    <div 
-      className="min-h-screen flex"
-      style={{
-        backgroundImage: `url('/lovable-uploads/5ed5d582-509e-412c-aa4b-ff19eb8841ba.png')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}
-    >
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-      <main className="flex-1 p-6 overflow-auto">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-6">
-            <div className="flex items-center gap-3 mb-2">
-              <UserPlus className="w-8 h-8 text-green-600" />
-              <h1 className="text-3xl font-bold text-gray-900">Add New Farmer</h1>
-            </div>
-            <p className="text-gray-600">Register a new farmer to join the cooperative</p>
-          </div>
-
+  const renderContent = () => {
+    switch (activeTab) {
+      case "registration":
+        return (
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-6">
               <Button 
                 variant="ghost" 
-                onClick={handleBackToFarmers}
+                onClick={() => window.history.back()}
                 className="flex items-center gap-2"
               >
                 <ArrowLeft className="w-4 h-4" />
-                Back to Milk Analytics
+                Back to Farmers
               </Button>
             </div>
 
@@ -282,7 +259,7 @@ const AddFarmerPage = () => {
                     <Button 
                       type="button" 
                       variant="outline"
-                      onClick={handleBackToFarmers}
+                      onClick={() => window.history.back()}
                     >
                       Cancel
                     </Button>
@@ -298,6 +275,46 @@ const AddFarmerPage = () => {
               </CardContent>
             </Card>
           </div>
+        );
+      
+      default:
+        return (
+          <Card className="shadow-lg border-0">
+            <CardHeader>
+              <CardTitle className="text-green-800">Coming Soon</CardTitle>
+              <CardDescription>This feature is under development</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-12">
+                <p className="text-gray-600">This section will be available soon</p>
+              </div>
+            </CardContent>
+          </Card>
+        );
+    }
+  };
+
+  return (
+    <div 
+      className="min-h-screen flex"
+      style={{
+        backgroundImage: `url('/lovable-uploads/5ed5d582-509e-412c-aa4b-ff19eb8841ba.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <main className="flex-1 p-6 overflow-auto">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-6">
+            <div className="flex items-center gap-3 mb-2">
+              <UserPlus className="w-8 h-8 text-green-600" />
+              <h1 className="text-3xl font-bold text-gray-900">Add New Farmer</h1>
+            </div>
+            <p className="text-gray-600">Register a new farmer to join the cooperative</p>
+          </div>
+          {renderContent()}
         </div>
       </main>
     </div>
