@@ -13,7 +13,11 @@ import {
   Settings, 
   LogOut,
   Menu,
-  X
+  X,
+  User,
+  UserPlus,
+  Bell,
+  MessageSquare
 } from "lucide-react";
 
 interface SidebarProps {
@@ -31,6 +35,12 @@ const Sidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
     { id: "loans", label: "Loan Applications", icon: FileText },
     { id: "payments", label: "Payments", icon: CreditCard },
     { id: "members", label: "Members", icon: Users },
+    { id: "account", label: "Account Management", icon: User },
+    { id: "registration", label: "Member Registration", icon: UserPlus },
+    { id: "reports", label: "Reports", icon: FileText },
+    { id: "notifications", label: "Notifications & Messages", icon: Bell },
+    { id: "messages", label: "Messages", icon: MessageSquare },
+    { id: "admin", label: "System Admin", icon: Settings },
     { id: "settings", label: "Settings", icon: Settings },
   ];
 
@@ -61,7 +71,7 @@ const Sidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4">
+      <nav className="flex-1 p-4 overflow-y-auto">
         <ul className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;

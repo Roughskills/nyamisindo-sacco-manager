@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import DashboardContent from "./DashboardContent";
@@ -13,7 +14,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { BarChart3, Users, Milk } from "lucide-react";
+import { BarChart3, Users, Milk, User, UserPlus, Bell, MessageSquare } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
 import Chart3D from "./Chart3D";
 
@@ -149,6 +150,102 @@ const MainLayout = () => {
             </CardContent>
           </Card>
         );
+      case "account":
+        return (
+          <Card className="shadow-lg border-0">
+            <CardHeader>
+              <CardTitle className="text-green-800">Account Management</CardTitle>
+              <CardDescription>Manage user accounts and profiles</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-12">
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Account Management</h3>
+                <p className="text-gray-600 mb-6">Account management features coming soon</p>
+                <Button className="bg-green-600 hover:bg-green-700">Manage Accounts</Button>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      case "registration":
+        return (
+          <Card className="shadow-lg border-0">
+            <CardHeader>
+              <CardTitle className="text-green-800">Member Registration</CardTitle>
+              <CardDescription>Register new cooperative members</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-12">
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Member Registration</h3>
+                <p className="text-gray-600 mb-6">Registration system coming soon</p>
+                <Button className="bg-green-600 hover:bg-green-700">Start Registration</Button>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      case "reports":
+        return (
+          <Card className="shadow-lg border-0">
+            <CardHeader>
+              <CardTitle className="text-green-800">Reports</CardTitle>
+              <CardDescription>Generate and view system reports</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-12">
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Reports & Analytics</h3>
+                <p className="text-gray-600 mb-6">Reporting features coming soon</p>
+                <Button className="bg-green-600 hover:bg-green-700">Generate Reports</Button>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      case "notifications":
+        return (
+          <Card className="shadow-lg border-0">
+            <CardHeader>
+              <CardTitle className="text-green-800">Notifications & Messages</CardTitle>
+              <CardDescription>Manage system notifications and alerts</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-12">
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Notification Center</h3>
+                <p className="text-gray-600 mb-6">Notification system coming soon</p>
+                <Button className="bg-green-600 hover:bg-green-700">View Notifications</Button>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      case "messages":
+        return (
+          <Card className="shadow-lg border-0">
+            <CardHeader>
+              <CardTitle className="text-green-800">Messages</CardTitle>
+              <CardDescription>Internal messaging system</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-12">
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Message Center</h3>
+                <p className="text-gray-600 mb-6">Messaging features coming soon</p>
+                <Button className="bg-green-600 hover:bg-green-700">View Messages</Button>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      case "admin":
+        return (
+          <Card className="shadow-lg border-0">
+            <CardHeader>
+              <CardTitle className="text-green-800">System Admin</CardTitle>
+              <CardDescription>System administration and management</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-12">
+                <h3 className="text-lg font-medium text-gray-900 mb-2">System Administration</h3>
+                <p className="text-gray-600 mb-6">Admin features coming soon</p>
+                <Button className="bg-green-600 hover:bg-green-700">Admin Panel</Button>
+              </div>
+            </CardContent>
+          </Card>
+        );
       case "settings":
         return (
           <Card className="shadow-lg border-0">
@@ -224,6 +321,12 @@ const MainLayout = () => {
               {activeTab === "loans" && <Users className="w-8 h-8 text-purple-600" />}
               {activeTab === "payments" && <Users className="w-8 h-8 text-orange-600" />}
               {activeTab === "members" && <Users className="w-8 h-8 text-green-600" />}
+              {activeTab === "account" && <User className="w-8 h-8 text-blue-600" />}
+              {activeTab === "registration" && <UserPlus className="w-8 h-8 text-purple-600" />}
+              {activeTab === "reports" && <BarChart3 className="w-8 h-8 text-indigo-600" />}
+              {activeTab === "notifications" && <Bell className="w-8 h-8 text-yellow-600" />}
+              {activeTab === "messages" && <MessageSquare className="w-8 h-8 text-blue-600" />}
+              {activeTab === "admin" && <Users className="w-8 h-8 text-red-600" />}
               {activeTab === "settings" && <Users className="w-8 h-8 text-gray-600" />}
               <h1 className="text-3xl font-bold text-gray-900">
                 {activeTab === "dashboard" && "Dashboard Overview"}
@@ -231,6 +334,12 @@ const MainLayout = () => {
                 {activeTab === "loans" && "Loan Applications"}
                 {activeTab === "payments" && "Payment Management"}
                 {activeTab === "members" && "Member Management"}
+                {activeTab === "account" && "Account Management"}
+                {activeTab === "registration" && "Member Registration"}
+                {activeTab === "reports" && "Reports"}
+                {activeTab === "notifications" && "Notifications & Messages"}
+                {activeTab === "messages" && "Messages"}
+                {activeTab === "admin" && "System Admin"}
                 {activeTab === "settings" && "System Settings"}
               </h1>
             </div>
@@ -240,6 +349,12 @@ const MainLayout = () => {
               {activeTab === "loans" && "Manage loan applications and approvals"}
               {activeTab === "payments" && "Process and track farmer payments"}
               {activeTab === "members" && "Manage cooperative member information"}
+              {activeTab === "account" && "Manage user accounts and profiles"}
+              {activeTab === "registration" && "Register new cooperative members"}
+              {activeTab === "reports" && "Generate and view system reports"}
+              {activeTab === "notifications" && "Manage system notifications and alerts"}
+              {activeTab === "messages" && "Internal messaging system"}
+              {activeTab === "admin" && "System administration and management"}
               {activeTab === "settings" && "Configure system settings and preferences"}
             </p>
           </div>
