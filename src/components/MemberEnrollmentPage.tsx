@@ -74,7 +74,7 @@ const MemberEnrollmentPage = () => {
       membershipType: 'Regular',
       initialDeposit: 50000,
       dateRegistered: '2024-01-15',
-      profilePhoto: '/api/placeholder/40/40',
+      profilePhoto: '/lovable-uploads/32cc625f-c0ad-42ea-ade9-1bf9d73d9ed0.png',
       status: 'active',
       submittedBy: 'Admin User',
       submissionDate: '2024-01-15',
@@ -92,7 +92,7 @@ const MemberEnrollmentPage = () => {
       membershipType: 'Premium',
       initialDeposit: 100000,
       dateRegistered: '2024-01-20',
-      profilePhoto: '/api/placeholder/40/40',
+      profilePhoto: '/lovable-uploads/39bf3300-da67-4e46-aa6e-89ee8efaba00.png',
       status: 'active',
       submittedBy: 'Admin User',
       submissionDate: '2024-01-20',
@@ -110,7 +110,7 @@ const MemberEnrollmentPage = () => {
       membershipType: 'Regular',
       initialDeposit: 25000,
       dateRegistered: '',
-      profilePhoto: '/api/placeholder/40/40',
+      profilePhoto: '/lovable-uploads/40e63c42-bf7a-4837-82b2-a3ed1de37147.png',
       status: 'pending',
       submittedBy: 'Admin User',
       submissionDate: '2024-01-25'
@@ -126,7 +126,7 @@ const MemberEnrollmentPage = () => {
       membershipType: 'Student',
       initialDeposit: 10000,
       dateRegistered: '',
-      profilePhoto: '/api/placeholder/40/40',
+      profilePhoto: '/lovable-uploads/4f5c5c7a-a091-4327-a01f-8a9ed50b0e17.png',
       status: 'pending',
       submittedBy: 'Admin User',
       submissionDate: '2024-01-26'
@@ -185,7 +185,7 @@ const MemberEnrollmentPage = () => {
         membershipType: formData.membershipType,
         initialDeposit: parseFloat(formData.initialDeposit) || 0,
         dateRegistered: '',
-        profilePhoto: '/api/placeholder/40/40',
+        profilePhoto: '/lovable-uploads/5270e3a7-68c7-4872-8bb8-3577295649b2.png',
         status: 'pending',
         submittedBy: 'Current User', // Would be the actual logged-in user
         submissionDate: new Date().toISOString().split('T')[0]
@@ -364,7 +364,7 @@ const MemberEnrollmentPage = () => {
                       <TableCell>
                         <div className="flex items-center space-x-3">
                           <Avatar>
-                            <AvatarImage src={member.profilePhoto} />
+                            <AvatarImage src={member.profilePhoto} alt={member.fullName} />
                             <AvatarFallback>{member.fullName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                           </Avatar>
                           <div>
@@ -613,7 +613,7 @@ const MemberEnrollmentPage = () => {
                       <div className="flex items-start justify-between">
                         <div className="flex items-center space-x-4">
                           <Avatar className="h-16 w-16">
-                            <AvatarImage src={member.profilePhoto} />
+                            <AvatarImage src={member.profilePhoto} alt={member.fullName} />
                             <AvatarFallback className="text-lg">
                               {member.fullName.split(' ').map(n => n[0]).join('')}
                             </AvatarFallback>
