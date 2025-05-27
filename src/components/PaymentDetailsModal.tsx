@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   Dialog,
@@ -70,11 +71,11 @@ const PaymentDetailsModal = ({ payment, isOpen, onClose }: PaymentDetailsModalPr
   const getMethodImage = (method: string) => {
     switch (method) {
       case 'airtel':
-        return '/lovable-uploads/02ac8073-82cb-4474-8cb0-65b4acf18188.png';
-      case 'mtn':
         return '/lovable-uploads/c09eb5a0-bc8a-48bf-a0bb-906aebc779a6.png';
+      case 'mtn':
+        return '/lovable-uploads/02ac8073-82cb-4474-8cb0-65b4acf18188.png';
       case 'bank':
-        return '/lovable-uploads/38792e50-48c0-4f46-92fc-820a2ff1f442.png';
+        return '/lovable-uploads/a6cc8166-7f4f-4c47-8f1d-9c59e88de71d.png';
       default:
         return '';
     }
