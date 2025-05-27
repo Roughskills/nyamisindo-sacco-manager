@@ -11,6 +11,7 @@ import PaymentManagement from "./PaymentManagement";
 import NotificationsPage from "./NotificationsPage";
 import ReportsPage from "./ReportsPage";
 import SystemAdminPage from "./SystemAdminPage";
+import SettingsPage from "./SettingsPage";
 
 interface MainContentProps {
   activeTab: string;
@@ -70,14 +71,7 @@ const MainContent = ({ activeTab }: MainContentProps) => {
       return <SystemAdminPage />;
     
     case "settings":
-      return (
-        <PlaceholderCard
-          title="Settings"
-          description="System configuration and preferences"
-          featureName="System Settings"
-          buttonText="Configure Settings"
-        />
-      );
+      return <SettingsPage />;
     
     default:
       return <DashboardContent />;
