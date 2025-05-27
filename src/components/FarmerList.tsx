@@ -118,7 +118,7 @@ const FarmerList = () => {
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-green-800">Milk Analytics</h2>
+          <h2 className="text-2xl font-bold text-green-800">Individual Production Analysis</h2>
           <p className="text-gray-600">Track member profiles and analytics information</p>
         </div>
         <div className="flex gap-2">

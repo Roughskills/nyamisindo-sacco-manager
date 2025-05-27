@@ -44,7 +44,7 @@ const MainHeader = ({ activeTab }: MainHeaderProps) => {
       case "dashboard":
         return "Dashboard Overview";
       case "farmers":
-        return "Milk Analytics";
+        return "Individual Production Analysis";
       case "collection":
         return "Milk Collection";
       case "loans":
