@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { UserPlus, Users, CreditCard, Search, Plus, CheckCircle, Calendar, Phone, Mail, MapPin } from "lucide-react";
+import { UserPlus, Users, CreditCard, Search, Plus, CheckCircle, Calendar, Phone, Mail, MapPin, Clock, UserCheck, X, Check, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface EnrolledMember {
@@ -25,7 +24,12 @@ interface EnrolledMember {
   initialDeposit: number;
   dateRegistered: string;
   profilePhoto: string;
-  status: 'active' | 'pending' | 'suspended';
+  status: 'active' | 'pending' | 'suspended' | 'rejected';
+  submittedBy?: string;
+  submissionDate?: string;
+  reviewedBy?: string;
+  reviewDate?: string;
+  reviewComments?: string;
 }
 
 interface EnrollmentFormData {
@@ -42,7 +46,9 @@ interface EnrollmentFormData {
 const MemberEnrollmentPage = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
+  const [supervisionSearchTerm, setSupervisionSearchTerm] = useState('');
   const [isEnrolling, setIsEnrolling] = useState(false);
+  const [isProcessing, setIsProcessing] = useState<string | null>(null);
   
   const [formData, setFormData] = useState<EnrollmentFormData>({
     fullName: '',
@@ -55,7 +61,7 @@ const MemberEnrollmentPage = () => {
     profilePhoto: null
   });
 
-  // Mock enrolled members data
+  // Mock enrolled members data with supervision workflow
   const [enrolledMembers, setEnrolledMembers] = useState<EnrolledMember[]>([
     {
       memberId: 'MEM001',
@@ -69,7 +75,11 @@ const MemberEnrollmentPage = () => {
       initialDeposit: 50000,
       dateRegistered: '2024-01-15',
       profilePhoto: '/api/placeholder/40/40',
-      status: 'active'
+      status: 'active',
+      submittedBy: 'Admin User',
+      submissionDate: '2024-01-15',
+      reviewedBy: 'Supervisor A',
+      reviewDate: '2024-01-15'
     },
     {
       memberId: 'MEM002',
@@ -83,7 +93,43 @@ const MemberEnrollmentPage = () => {
       initialDeposit: 100000,
       dateRegistered: '2024-01-20',
       profilePhoto: '/api/placeholder/40/40',
-      status: 'active'
+      status: 'active',
+      submittedBy: 'Admin User',
+      submissionDate: '2024-01-20',
+      reviewedBy: 'Supervisor B',
+      reviewDate: '2024-01-20'
+    },
+    {
+      memberId: 'MEM003',
+      accountNumber: '',
+      fullName: 'David Nkurunziza',
+      email: 'david.nkurunziza@email.com',
+      phone: '+250788987654',
+      dateOfBirth: '1988-05-10',
+      address: 'Kigali, Nyarugenge District',
+      membershipType: 'Regular',
+      initialDeposit: 25000,
+      dateRegistered: '',
+      profilePhoto: '/api/placeholder/40/40',
+      status: 'pending',
+      submittedBy: 'Admin User',
+      submissionDate: '2024-01-25'
+    },
+    {
+      memberId: 'MEM004',
+      accountNumber: '',
+      fullName: 'Sarah Uwimana',
+      email: 'sarah.uwimana@email.com',
+      phone: '+250788456789',
+      dateOfBirth: '1992-12-03',
+      address: 'Kigali, Gasabo District',
+      membershipType: 'Student',
+      initialDeposit: 10000,
+      dateRegistered: '',
+      profilePhoto: '/api/placeholder/40/40',
+      status: 'pending',
+      submittedBy: 'Admin User',
+      submissionDate: '2024-01-26'
     }
   ]);
 
@@ -94,7 +140,7 @@ const MemberEnrollmentPage = () => {
 
   const generateAccountNumber = (): string => {
     const year = new Date().getFullYear();
-    const nextId = (enrolledMembers.length + 1).toString().padStart(3, '0');
+    const nextId = (enrolledMembers.filter(m => m.status === 'active').length + 1).toString().padStart(3, '0');
     return `SAV${year}${nextId}`;
   };
 
@@ -130,7 +176,7 @@ const MemberEnrollmentPage = () => {
 
       const newMember: EnrolledMember = {
         memberId: generateMemberId(),
-        accountNumber: generateAccountNumber(),
+        accountNumber: '', // Will be generated upon approval
         fullName: formData.fullName,
         email: formData.email,
         phone: formData.phone,
@@ -138,9 +184,11 @@ const MemberEnrollmentPage = () => {
         address: formData.address,
         membershipType: formData.membershipType,
         initialDeposit: parseFloat(formData.initialDeposit) || 0,
-        dateRegistered: new Date().toISOString().split('T')[0],
+        dateRegistered: '',
         profilePhoto: '/api/placeholder/40/40',
-        status: 'active'
+        status: 'pending',
+        submittedBy: 'Current User', // Would be the actual logged-in user
+        submissionDate: new Date().toISOString().split('T')[0]
       };
 
       setEnrolledMembers(prev => [...prev, newMember]);
@@ -158,18 +206,65 @@ const MemberEnrollmentPage = () => {
       });
 
       toast({
-        title: "Enrollment Successful!",
-        description: `Member ${newMember.fullName} has been enrolled with Account Number: ${newMember.accountNumber}`,
+        title: "Enrollment Submitted!",
+        description: `Member ${newMember.fullName} has been submitted for supervisor approval.`,
       });
 
     } catch (error) {
       toast({
         title: "Enrollment Failed",
-        description: "Failed to enroll member. Please try again.",
+        description: "Failed to submit enrollment. Please try again.",
         variant: "destructive"
       });
     } finally {
       setIsEnrolling(false);
+    }
+  };
+
+  const handleSupervisionAction = async (memberId: string, action: 'approve' | 'reject', comments?: string) => {
+    setIsProcessing(memberId);
+
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      setEnrolledMembers(prev => prev.map(member => {
+        if (member.memberId === memberId) {
+          const updatedMember = {
+            ...member,
+            status: action === 'approve' ? 'active' as const : 'rejected' as const,
+            reviewedBy: 'Current Supervisor', // Would be the actual logged-in supervisor
+            reviewDate: new Date().toISOString().split('T')[0],
+            reviewComments: comments
+          };
+
+          // Generate account number if approved
+          if (action === 'approve') {
+            updatedMember.accountNumber = generateAccountNumber();
+            updatedMember.dateRegistered = new Date().toISOString().split('T')[0];
+          }
+
+          return updatedMember;
+        }
+        return member;
+      }));
+
+      toast({
+        title: action === 'approve' ? "Member Approved!" : "Member Rejected",
+        description: action === 'approve' 
+          ? "Member enrollment has been approved and account created."
+          : "Member enrollment has been rejected.",
+        variant: action === 'approve' ? "default" : "destructive"
+      });
+
+    } catch (error) {
+      toast({
+        title: "Action Failed",
+        description: "Failed to process the request. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsProcessing(null);
     }
   };
 
@@ -179,11 +274,18 @@ const MemberEnrollmentPage = () => {
     member.accountNumber.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const pendingMembers = enrolledMembers.filter(member => 
+    member.status === 'pending' &&
+    (member.fullName.toLowerCase().includes(supervisionSearchTerm.toLowerCase()) ||
+     member.memberId.toLowerCase().includes(supervisionSearchTerm.toLowerCase()))
+  );
+
   const getStatusBadge = (status: string) => {
     const colors = {
       active: 'bg-green-100 text-green-800',
       pending: 'bg-yellow-100 text-yellow-800',
-      suspended: 'bg-red-100 text-red-800'
+      suspended: 'bg-red-100 text-red-800',
+      rejected: 'bg-gray-100 text-gray-800'
     };
     return colors[status as keyof typeof colors] || colors.pending;
   };
@@ -196,14 +298,20 @@ const MemberEnrollmentPage = () => {
           <h1 className="text-3xl font-bold text-gray-900">Member Enrollment</h1>
           <p className="text-gray-600 mt-2">Enroll new members and manage existing enrollments</p>
         </div>
-        <Badge variant="outline" className="px-3 py-1">
-          <Users className="h-4 w-4 mr-2" />
-          {enrolledMembers.length} Total Members
-        </Badge>
+        <div className="flex gap-4">
+          <Badge variant="outline" className="px-3 py-1">
+            <Users className="h-4 w-4 mr-2" />
+            {enrolledMembers.filter(m => m.status === 'active').length} Active Members
+          </Badge>
+          <Badge variant="outline" className="px-3 py-1 bg-yellow-50">
+            <Clock className="h-4 w-4 mr-2" />
+            {pendingMembers.length} Pending Approval
+          </Badge>
+        </div>
       </div>
 
       <Tabs defaultValue="enrolled" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="enrolled" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             Enrolled Members
@@ -211,6 +319,10 @@ const MemberEnrollmentPage = () => {
           <TabsTrigger value="enroll" className="flex items-center gap-2">
             <UserPlus className="h-4 w-4" />
             New Enrollment
+          </TabsTrigger>
+          <TabsTrigger value="supervision" className="flex items-center gap-2">
+            <UserCheck className="h-4 w-4" />
+            Supervision ({pendingMembers.length})
           </TabsTrigger>
         </TabsList>
 
@@ -280,15 +392,17 @@ const MemberEnrollmentPage = () => {
                       <TableCell>
                         <div>
                           <p className="font-medium">{member.membershipType}</p>
-                          <div className="flex items-center text-sm text-gray-500">
-                            <Calendar className="h-3 w-3 mr-1" />
-                            {member.dateRegistered}
-                          </div>
+                          {member.dateRegistered && (
+                            <div className="flex items-center text-sm text-gray-500">
+                              <Calendar className="h-3 w-3 mr-1" />
+                              {member.dateRegistered}
+                            </div>
+                          )}
                         </div>
                       </TableCell>
                       <TableCell>
                         <div>
-                          <p className="font-medium">{member.accountNumber}</p>
+                          <p className="font-medium">{member.accountNumber || 'Pending'}</p>
                           <p className="text-sm text-gray-500">
                             Initial: {member.initialDeposit.toLocaleString()} RWF
                           </p>
@@ -308,6 +422,7 @@ const MemberEnrollmentPage = () => {
         </TabsContent>
 
         <TabsContent value="enroll" className="space-y-6">
+          
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -417,7 +532,7 @@ const MemberEnrollmentPage = () => {
                     </div>
                     <div>
                       <span className="text-blue-700">Account Number:</span>
-                      <span className="ml-2 font-mono">{generateAccountNumber()}</span>
+                      <span className="ml-2 font-mono text-yellow-600">Generated after approval</span>
                     </div>
                   </div>
                 </div>
@@ -447,16 +562,140 @@ const MemberEnrollmentPage = () => {
                   {isEnrolling ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Enrolling...
+                      Submitting...
                     </>
                   ) : (
                     <>
                       <CheckCircle className="h-4 w-4 mr-2" />
-                      Enroll Member
+                      Submit for Approval
                     </>
                   )}
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="supervision" className="space-y-6">
+          {/* Search for pending members */}
+          <Card>
+            <CardContent className="pt-6">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  placeholder="Search pending enrollments..."
+                  value={supervisionSearchTerm}
+                  onChange={(e) => setSupervisionSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Pending Enrollments */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <UserCheck className="h-5 w-5" />
+                Pending Member Enrollments ({pendingMembers.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {pendingMembers.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <FileText className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                  <p>No pending enrollments for review</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {pendingMembers.map((member) => (
+                    <div key={member.memberId} className="border rounded-lg p-6 space-y-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center space-x-4">
+                          <Avatar className="h-16 w-16">
+                            <AvatarImage src={member.profilePhoto} />
+                            <AvatarFallback className="text-lg">
+                              {member.fullName.split(' ').map(n => n[0]).join('')}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <h3 className="text-lg font-semibold">{member.fullName}</h3>
+                            <p className="text-sm text-gray-500">Member ID: {member.memberId}</p>
+                            <div className="flex items-center mt-2">
+                              <Badge className="bg-yellow-100 text-yellow-800">
+                                <Clock className="h-3 w-3 mr-1" />
+                                Pending Review
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right text-sm text-gray-500">
+                          <p>Submitted by: {member.submittedBy}</p>
+                          <p>Date: {member.submissionDate}</p>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <h4 className="font-medium mb-2">Contact Information</h4>
+                          <div className="space-y-1 text-sm">
+                            <div className="flex items-center">
+                              <Phone className="h-3 w-3 mr-2 text-gray-400" />
+                              {member.phone}
+                            </div>
+                            <div className="flex items-center">
+                              <Mail className="h-3 w-3 mr-2 text-gray-400" />
+                              {member.email}
+                            </div>
+                            <div className="flex items-center">
+                              <MapPin className="h-3 w-3 mr-2 text-gray-400" />
+                              {member.address}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <h4 className="font-medium mb-2">Membership Details</h4>
+                          <div className="space-y-1 text-sm">
+                            <p><span className="text-gray-600">Type:</span> {member.membershipType}</p>
+                            <p><span className="text-gray-600">Date of Birth:</span> {member.dateOfBirth}</p>
+                            <p><span className="text-gray-600">Initial Deposit:</span> {member.initialDeposit.toLocaleString()} RWF</p>
+                          </div>
+                        </div>
+
+                        <div>
+                          <h4 className="font-medium mb-2">Actions</h4>
+                          <div className="space-y-2">
+                            <Button
+                              size="sm"
+                              onClick={() => handleSupervisionAction(member.memberId, 'approve')}
+                              disabled={isProcessing === member.memberId}
+                              className="w-full bg-green-600 hover:bg-green-700"
+                            >
+                              {isProcessing === member.memberId ? (
+                                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
+                              ) : (
+                                <Check className="h-3 w-3 mr-2" />
+                              )}
+                              Approve
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => handleSupervisionAction(member.memberId, 'reject', 'Incomplete documentation')}
+                              disabled={isProcessing === member.memberId}
+                              className="w-full"
+                            >
+                              <X className="h-3 w-3 mr-2" />
+                              Reject
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
