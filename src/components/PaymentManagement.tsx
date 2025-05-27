@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { CreditCard, Smartphone, Building2, CheckCircle2, Clock, AlertCircle, DollarSign } from "lucide-react";
+import PaymentDetailsModal from "./PaymentDetailsModal";
 
 interface Payment {
   id: string;
@@ -24,6 +24,8 @@ interface Payment {
 const PaymentManagement = () => {
   const [activeTab, setActiveTab] = useState('make-payment');
   const [paymentMethod, setPaymentMethod] = useState('');
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [paymentData, setPaymentData] = useState({
     farmerName: '',
     amount: '',
@@ -117,6 +119,16 @@ const PaymentManagement = () => {
     console.log('Payment submitted:', { paymentMethod, paymentData });
     // Here you would integrate with actual payment APIs
     alert('Payment initiated successfully!');
+  };
+
+  const handleViewDetails = (payment: Payment) => {
+    setSelectedPayment(payment);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedPayment(null);
   };
 
   return (
@@ -431,7 +443,13 @@ const PaymentManagement = () => {
                   </div>
                   
                   <div className="flex justify-end mt-4 gap-2">
-                    <Button variant="outline" size="sm">View Details</Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleViewDetails(payment)}
+                    >
+                      View Details
+                    </Button>
                     {payment.status === 'failed' && (
                       <Button size="sm" className="bg-red-600 hover:bg-red-700">Retry Payment</Button>
                     )}
@@ -458,6 +476,12 @@ const PaymentManagement = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <PaymentDetailsModal
+        payment={selectedPayment}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 };
