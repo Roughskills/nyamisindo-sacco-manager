@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -6,6 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { useToast } from '@/hooks/use-toast';
+import AddUserModal from './AddUserModal';
+import EditRoleModal from './EditRoleModal';
+import ConfigurationModal from './ConfigurationModal';
 import { 
   Users, 
   Shield, 
@@ -48,6 +51,13 @@ interface UserSession {
 const SystemAdminPage = () => {
   const [activeTab, setActiveTab] = useState('user-management');
   const [searchTerm, setSearchTerm] = useState('');
+  const [addUserOpen, setAddUserOpen] = useState(false);
+  const [editRoleOpen, setEditRoleOpen] = useState(false);
+  const [configOpen, setConfigOpen] = useState(false);
+  const [configType, setConfigType] = useState('');
+  const [configTitle, setConfigTitle] = useState('');
+  const [selectedRole, setSelectedRole] = useState<any>(null);
+  const { toast } = useToast();
 
   // Mock data
   const users: User[] = [
@@ -134,6 +144,31 @@ const SystemAdminPage = () => {
     return variants[status as keyof typeof variants] || variants.inactive;
   };
 
+  const handleUserAction = (action: string, userId?: string) => {
+    toast({
+      title: "Action Performed",
+      description: `${action} action has been executed${userId ? ` for user ${userId}` : ''}`,
+    });
+  };
+
+  const handleRoleEdit = (role: any) => {
+    setSelectedRole(role);
+    setEditRoleOpen(true);
+  };
+
+  const handleConfiguration = (type: string, title: string) => {
+    setConfigType(type);
+    setConfigTitle(title);
+    setConfigOpen(true);
+  };
+
+  const handleEndSession = (sessionId: string) => {
+    toast({
+      title: "Session Ended",
+      description: `Session ${sessionId} has been terminated`,
+    });
+  };
+
   return (
     <div className="space-y-6">
       {/* System Overview Stats */}
@@ -173,7 +208,7 @@ const SystemAdminPage = () => {
                   <Users className="h-5 w-5" />
                   User Management
                 </CardTitle>
-                <Button>
+                <Button onClick={() => setAddUserOpen(true)}>
                   <Plus className="h-4 w-4 mr-2" />
                   Add User
                 </Button>
@@ -210,10 +245,10 @@ const SystemAdminPage = () => {
                       </Badge>
                       <Badge variant="outline">{user.role}</Badge>
                       <div className="flex space-x-1">
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" onClick={() => handleUserAction('Edit', user.id)}>
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" onClick={() => handleUserAction('Delete', user.id)}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -243,7 +278,7 @@ const SystemAdminPage = () => {
                         <h3 className="font-medium">{role.name}</h3>
                         <p className="text-sm text-gray-600">{role.users} users • {role.permissions} permissions</p>
                       </div>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleRoleEdit(role)}>
                         <Edit className="h-4 w-4" />
                       </Button>
                     </div>
@@ -264,7 +299,7 @@ const SystemAdminPage = () => {
                   {['Employee Management', 'User Privileges', 'General Control', 'Loans Control', 'Accounts Control', 'API Channels'].map((right, index) => (
                     <div key={index} className="flex items-center justify-between p-2 border rounded">
                       <span className="text-sm">{right}</span>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleConfiguration('access', right)}>
                         <Settings className="h-4 w-4" />
                       </Button>
                     </div>
@@ -289,24 +324,25 @@ const SystemAdminPage = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span>Multi-Factor Authentication</span>
-                    <Button variant="outline" size="sm">Configure</Button>
+                    <Button variant="outline" size="sm" onClick={() => handleConfiguration('mfa', 'Multi-Factor Authentication')}>Configure</Button>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Password Policies</span>
-                    <Button variant="outline" size="sm">Edit</Button>
+                    <Button variant="outline" size="sm" onClick={() => handleConfiguration('password', 'Password Policies')}>Edit</Button>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Security Logs</span>
-                    <Button variant="outline" size="sm">View</Button>
+                    <Button variant="outline" size="sm" onClick={() => handleUserAction('View Security Logs')}>View</Button>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Session Timeout</span>
-                    <Button variant="outline" size="sm">Configure</Button>
+                    <Button variant="outline" size="sm" onClick={() => handleConfiguration('session', 'Session Timeout')}>Configure</Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
+            {/* Audit Logs card */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -348,19 +384,19 @@ const SystemAdminPage = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span>System Workflows</span>
-                    <Button variant="outline" size="sm">Configure</Button>
+                    <Button variant="outline" size="sm" onClick={() => handleConfiguration('workflows', 'System Workflows')}>Configure</Button>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Business Preferences</span>
-                    <Button variant="outline" size="sm">Edit</Button>
+                    <Button variant="outline" size="sm" onClick={() => handleConfiguration('preferences', 'Business Preferences')}>Edit</Button>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Integration Settings</span>
-                    <Button variant="outline" size="sm">Manage</Button>
+                    <Button variant="outline" size="sm" onClick={() => handleConfiguration('integrations', 'Integration Settings')}>Manage</Button>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Notification Config</span>
-                    <Button variant="outline" size="sm">Setup</Button>
+                    <Button variant="outline" size="sm" onClick={() => handleConfiguration('notifications', 'Notification Configuration')}>Setup</Button>
                   </div>
                 </div>
               </CardContent>
@@ -377,19 +413,19 @@ const SystemAdminPage = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span>Backup & Recovery</span>
-                    <Button variant="outline" size="sm">Configure</Button>
+                    <Button variant="outline" size="sm" onClick={() => handleConfiguration('backup', 'Backup & Recovery')}>Configure</Button>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Data Export</span>
-                    <Button variant="outline" size="sm">Export</Button>
+                    <Button variant="outline" size="sm" onClick={() => handleUserAction('Export Data')}>Export</Button>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Storage Usage</span>
-                    <Button variant="outline" size="sm">Monitor</Button>
+                    <Button variant="outline" size="sm" onClick={() => handleUserAction('Monitor Storage')}>Monitor</Button>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Data Cleanup</span>
-                    <Button variant="outline" size="sm">Schedule</Button>
+                    <Button variant="outline" size="sm" onClick={() => handleConfiguration('cleanup', 'Data Cleanup Schedule')}>Schedule</Button>
                   </div>
                 </div>
               </CardContent>
@@ -484,7 +520,7 @@ const SystemAdminPage = () => {
                       <Badge className={getStatusBadge(session.status)}>
                         {session.status}
                       </Badge>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={() => handleEndSession(session.id)}>
                         <Lock className="h-4 w-4 mr-1" />
                         End Session
                       </Button>
@@ -496,6 +532,16 @@ const SystemAdminPage = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Modals */}
+      <AddUserModal open={addUserOpen} onOpenChange={setAddUserOpen} />
+      <EditRoleModal open={editRoleOpen} onOpenChange={setEditRoleOpen} role={selectedRole} />
+      <ConfigurationModal 
+        open={configOpen} 
+        onOpenChange={setConfigOpen} 
+        type={configType}
+        title={configTitle}
+      />
     </div>
   );
 };
