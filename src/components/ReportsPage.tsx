@@ -8,12 +8,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Download, FileText, Users, Milk, DollarSign, AlertTriangle, TrendingUp, BarChart3, PieChart, Search, Filter, Printer, CheckCircle, Loader2, Activity, Target } from "lucide-react";
+import { CalendarIcon, Download, FileText, Users, Milk, DollarSign, AlertTriangle, TrendingUp, BarChart3, PieChart, Search, Filter, Printer, CheckCircle, Loader2, Activity, Target, Eye } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart as RechartsPieChart, Cell, LineChart, Line, AreaChart, Area, RadialBarChart, RadialBar, Legend } from "recharts";
 import { useToast } from "@/hooks/use-toast";
+import ReportViewModal from "./ReportViewModal";
 
 interface Report {
   id: string;
@@ -34,6 +35,8 @@ const ReportsPage = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [generatingReports, setGeneratingReports] = useState<Set<string>>(new Set());
   const [downloadingReports, setDownloadingReports] = useState<Set<string>>(new Set());
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [selectedReportForView, setSelectedReportForView] = useState<Report | null>(null);
   const { toast } = useToast();
 
   const reports: Report[] = [
@@ -109,7 +112,6 @@ const ReportsPage = () => {
     }
   ];
 
-  // Enhanced analytics data with more visual variety
   const [analyticsData, setAnalyticsData] = useState({
     milkCollection: [
       { month: 'Jan', volume: 1200, target: 1000, efficiency: 85 },
@@ -153,15 +155,18 @@ const ReportsPage = () => {
     return matchesSearch && matchesCategory;
   });
 
+  const viewReport = (report: Report) => {
+    setSelectedReportForView(report);
+    setViewModalOpen(true);
+  };
+
   const generateReport = async (reportId: string) => {
     console.log(`Starting report generation for: ${reportId}`);
     setGeneratingReports(prev => new Set(prev).add(reportId));
     
     try {
-      // Simulate report generation with realistic delay
       await new Promise(resolve => setTimeout(resolve, 3000));
       
-      // Simulate updating analytics data based on the report
       if (reportId === 'daily-milk') {
         setAnalyticsData(prev => ({
           ...prev,
@@ -202,10 +207,8 @@ const ReportsPage = () => {
     setDownloadingReports(prev => new Set(prev).add(downloadKey));
     
     try {
-      // Simulate file generation and download
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Create mock file content based on format
       let content = '';
       let mimeType = '';
       let fileExtension = '';
@@ -235,7 +238,6 @@ const ReportsPage = () => {
           throw new Error('Unsupported format');
       }
       
-      // Create and trigger download
       const blob = new Blob([content], { type: mimeType });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -376,6 +378,15 @@ const ReportsPage = () => {
                         <div className="flex gap-2">
                           <Button 
                             size="sm" 
+                            variant="outline"
+                            className="flex-1"
+                            onClick={() => viewReport(report)}
+                          >
+                            <Eye className="h-3 w-3 mr-2" />
+                            View
+                          </Button>
+                          <Button 
+                            size="sm" 
                             className="flex-1"
                             onClick={() => generateReport(report.id)}
                             disabled={isGenerating}
@@ -433,7 +444,6 @@ const ReportsPage = () => {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
-          {/* Key Metrics Dashboard */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {analyticsData.financialMetrics.map((metric, index) => (
               <Card key={metric.name} className="bg-slate-900 border-slate-700 text-white relative overflow-hidden">
@@ -468,9 +478,7 @@ const ReportsPage = () => {
             ))}
           </div>
 
-          {/* Main Analytics Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Enhanced Milk Collection Chart */}
             <Card className="bg-slate-900 border-slate-700 text-white">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
@@ -523,7 +531,6 @@ const ReportsPage = () => {
               </CardContent>
             </Card>
 
-            {/* Circular Progress Membership */}
             <Card className="bg-slate-900 border-slate-700 text-white">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
@@ -575,7 +582,6 @@ const ReportsPage = () => {
               </CardContent>
             </Card>
 
-            {/* Daily Collection Trends */}
             <Card className="bg-slate-900 border-slate-700 text-white">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
@@ -605,7 +611,6 @@ const ReportsPage = () => {
               </CardContent>
             </Card>
 
-            {/* Loan Risk Radial Chart */}
             <Card className="bg-slate-900 border-slate-700 text-white">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-white">
@@ -650,7 +655,6 @@ const ReportsPage = () => {
             </Card>
           </div>
 
-          {/* Real-time Statistics with modern design */}
           <Card className="bg-slate-900 border-slate-700 text-white">
             <CardHeader>
               <CardTitle className="text-white">Real-time Performance Dashboard</CardTitle>
@@ -786,6 +790,15 @@ const ReportsPage = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {selectedReportForView && (
+        <ReportViewModal 
+          isOpen={viewModalOpen}
+          onClose={() => setViewModalOpen(false)}
+          reportId={selectedReportForView.id}
+          reportName={selectedReportForView.name}
+        />
+      )}
     </div>
   );
 };
