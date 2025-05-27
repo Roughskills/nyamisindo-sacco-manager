@@ -1,185 +1,209 @@
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Banknote, Milk, Percent, DollarSign, Users, MapPin, Square } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Search, Plus, Users, TrendingUp, Calendar } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import AddCollectionModal from "./AddCollectionModal";
+
+interface Farmer {
+  id: number;
+  name: string;
+  milkProduction: number;
+  lastSubmission: string;
+  quality: "High" | "Medium" | "Low";
+}
+
+const farmersData: Farmer[] = [
+  {
+    id: 1,
+    name: "John Doe",
+    milkProduction: 65,
+    lastSubmission: "2024-03-15",
+    quality: "High",
+  },
+  {
+    id: 2,
+    name: "Jane Smith",
+    milkProduction: 50,
+    lastSubmission: "2024-03-15",
+    quality: "Medium",
+  },
+  {
+    id: 3,
+    name: "Alice Johnson",
+    milkProduction: 72,
+    lastSubmission: "2024-03-14",
+    quality: "High",
+  },
+  {
+    id: 4,
+    name: "Bob Williams",
+    milkProduction: 45,
+    lastSubmission: "2024-03-14",
+    quality: "Low",
+  },
+  {
+    id: 5,
+    name: "Charlie Brown",
+    milkProduction: 58,
+    lastSubmission: "2024-03-13",
+    quality: "Medium",
+  },
+];
 
 const FarmerList = () => {
-  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const { toast } = useToast();
 
-  const farmers = [
-    {
-      id: 1,
-      name: "John Muhire",
-      phone: "+250 788 123 456",
-      location: "Kigali, Gasabo District",
-      farmArea: "2.5 hectares (25,000 m²)",
-      todayMilk: 25,
-      monthlyTotal: 720,
-      status: "active",
-      lastSubmission: "6:30 AM",
-      image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=150&h=150&fit=crop&crop=face",
-      distributionScore: 92,
-      loanAmount: 500000
-    },
-    {
-      id: 2,
-      name: "Mary Uwimana",
-      phone: "+250 788 234 567",
-      location: "Nyagatare, Eastern Province",
-      farmArea: "1.8 hectares (18,000 m²)",
-      todayMilk: 0,
-      monthlyTotal: 650,
-      status: "pending",
-      lastSubmission: "Yesterday",
-      image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=150&h=150&fit=crop&crop=face",
-      distributionScore: 78,
-      loanAmount: 300000
-    },
-    {
-      id: 3,
-      name: "Peter Nkusi",
-      phone: "+250 788 345 678",
-      location: "Muhanga, Southern Province",
-      farmArea: "3.2 hectares (32,000 m²)",
-      todayMilk: 18,
-      monthlyTotal: 580,
-      status: "active",
-      lastSubmission: "7:15 AM",
-      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=150&h=150&fit=crop&crop=face",
-      distributionScore: 85,
-      loanAmount: 200000
-    },
-    {
-      id: 4,
-      name: "Grace Mukamana",
-      phone: "+250 788 456 789",
-      location: "Musanze, Northern Province",
-      farmArea: "2.1 hectares (21,000 m²)",
-      todayMilk: 22,
-      monthlyTotal: 695,
-      status: "active",
-      lastSubmission: "6:45 AM",
-      image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=150&h=150&fit=crop&crop=face",
-      distributionScore: 88,
-      loanAmount: 750000
-    },
-    {
-      id: 5,
-      name: "David Kayitare",
-      phone: "+250 788 567 890",
-      location: "Rwamagana, Eastern Province",
-      farmArea: "1.5 hectares (15,000 m²)",
-      todayMilk: 15,
-      monthlyTotal: 445,
-      status: "active",
-      lastSubmission: "8:00 AM",
-      image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=150&h=150&fit=crop&crop=face",
-      distributionScore: 73,
-      loanAmount: 150000
-    }
-  ];
+  const filteredFarmers = farmersData.filter((farmer) =>
+    farmer.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-UG', {
-      style: 'currency',
-      currency: 'UGX',
-      minimumFractionDigits: 0
-    }).format(amount);
+  const handleSubmission = () => {
+    toast({
+      title: "Milk Submission",
+      description: "Successfully recorded milk submission!",
+    });
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <Users className="w-8 h-8 text-green-600" />
-          <h2 className="text-2xl font-bold text-gray-900">Farmer Management</h2>
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-green-800">Milk Analytics</h2>
+          <p className="text-gray-600">Track farmer submissions and milk production</p>
         </div>
-        <Button 
-          className="bg-green-600 hover:bg-green-700"
-          onClick={() => navigate('/add-farmer')}
-        >
-          Add New Farmer
-        </Button>
+        <div className="flex gap-2">
+          <AddCollectionModal />
+          <Button 
+            onClick={() => window.location.href = '/add-farmer'}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Farmer
+          </Button>
+        </div>
       </div>
-      
-      <div className="grid gap-4">
-        {farmers.map((farmer) => (
-          <Card key={farmer.id} className="shadow-lg border-0 hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src={farmer.image} alt={farmer.name} />
-                    <AvatarFallback className="bg-green-100 text-green-800 font-semibold">
-                      {farmer.name.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">{farmer.name}</h3>
-                    <p className="text-sm text-gray-600">{farmer.phone}</p>
-                    <div className="flex items-center gap-1 mt-1">
-                      <MapPin className="w-3 h-3 text-blue-500" />
-                      <p className="text-xs text-gray-600">{farmer.location}</p>
-                    </div>
-                    <div className="flex items-center gap-1 mt-1">
-                      <Square className="w-3 h-3 text-green-500" />
-                      <p className="text-xs text-gray-600">{farmer.farmArea}</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center space-x-6">
-                  <div className="text-center">
-                    <div className="flex items-center justify-center mb-1">
-                      <Milk className="w-4 h-4 text-blue-600 mr-1" />
-                    </div>
-                    <p className="text-2xl font-bold text-green-600">{farmer.todayMilk}L</p>
-                    <p className="text-xs text-gray-600">Today</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="flex items-center justify-center mb-1">
-                      <Milk className="w-4 h-4 text-blue-600 mr-1" />
-                    </div>
-                    <p className="text-lg font-semibold text-gray-900">{farmer.monthlyTotal}L</p>
-                    <p className="text-xs text-gray-600">This Month</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="flex items-center justify-center mb-1">
-                      <Banknote className="w-4 h-4 text-green-600 mr-1" />
-                    </div>
-                    <p className="text-lg font-semibold text-green-600">150,000 UGX</p>
-                    <p className="text-xs text-gray-600">Total Saving Amount</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="flex items-center justify-center mb-1">
-                      <Percent className="w-4 h-4 text-purple-600 mr-1" />
-                    </div>
-                    <p className="text-lg font-semibold text-purple-600">{farmer.distributionScore}%</p>
-                    <p className="text-xs text-gray-600">Distribution Score</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="flex items-center justify-center mb-1">
-                      <DollarSign className="w-4 h-4 text-orange-600 mr-1" />
-                    </div>
-                    <p className="text-lg font-semibold text-orange-600">{formatCurrency(farmer.loanAmount)}</p>
-                    <p className="text-xs text-gray-600">Loan Amount</p>
-                  </div>
-                  <div className="text-center">
-                    <Badge 
-                      variant={farmer.status === 'active' ? 'default' : 'secondary'}
-                      className={farmer.status === 'active' ? 'bg-green-100 text-green-800' : ''}
-                    >
-                      {farmer.status}
-                    </Badge>
-                    <p className="text-xs text-gray-600 mt-1">{farmer.lastSubmission}</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <Card className="bg-white shadow-md border-0">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Farmers</CardTitle>
+            <Users className="h-4 w-4 text-gray-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{farmersData.length}</div>
+            <p className="text-sm text-gray-500">Active farmers</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white shadow-md border-0">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Average Milk Production
+            </CardTitle>
+            <TrendingUp className="h-4 w-4 text-gray-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {farmersData.reduce((acc, farmer) => acc + farmer.milkProduction, 0) /
+                farmersData.length}
+              L
+            </div>
+            <p className="text-sm text-gray-500">Per day</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white shadow-md border-0">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Latest Submission</CardTitle>
+            <Calendar className="h-4 w-4 text-gray-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">Today</div>
+            <p className="text-sm text-gray-500">Most recent</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Search Bar */}
+      <div className="relative">
+        <Input
+          type="text"
+          placeholder="Search farmers..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10 shadow-sm"
+        />
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <Search className="w-5 h-5 text-gray-500" />
+        </div>
+      </div>
+
+      {/* Farmers List */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Milk Production
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Last Submission
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Quality
+              </th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {filteredFarmers.map((farmer) => (
+              <tr key={farmer.id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {farmer.name}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {farmer.milkProduction} L
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {farmer.lastSubmission}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <Badge
+                    className={
+                      farmer.quality === "High"
+                        ? "bg-green-100 text-green-800"
+                        : farmer.quality === "Medium"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-red-100 text-red-800"
+                    }
+                  >
+                    {farmer.quality}
+                  </Badge>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <Button
+                    variant="outline"
+                    onClick={handleSubmission}
+                    className="bg-blue-500 text-white hover:bg-blue-700"
+                  >
+                    Record Submission
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
