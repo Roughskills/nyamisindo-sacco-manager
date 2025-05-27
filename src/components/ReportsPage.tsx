@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,11 +8,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Download, FileText, Users, Milk, DollarSign, AlertTriangle, TrendingUp, BarChart3, PieChart, Search, Filter, Printer, CheckCircle, Loader2 } from "lucide-react";
+import { CalendarIcon, Download, FileText, Users, Milk, DollarSign, AlertTriangle, TrendingUp, BarChart3, PieChart, Search, Filter, Printer, CheckCircle, Loader2, Activity, Target } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart as RechartsPieChart, Cell, LineChart, Line } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart as RechartsPieChart, Cell, LineChart, Line, AreaChart, Area, RadialBarChart, RadialBar, Legend } from "recharts";
 import { useToast } from "@/hooks/use-toast";
 
 interface Report {
@@ -110,31 +109,40 @@ const ReportsPage = () => {
     }
   ];
 
-  // Sample data for analytics with dynamic updates based on report generation
+  // Enhanced analytics data with more visual variety
   const [analyticsData, setAnalyticsData] = useState({
     milkCollection: [
-      { month: 'Jan', volume: 1200 },
-      { month: 'Feb', volume: 1400 },
-      { month: 'Mar', volume: 1800 },
-      { month: 'Apr', volume: 1600 },
-      { month: 'May', volume: 2000 },
-      { month: 'Jun', volume: 2200 }
+      { month: 'Jan', volume: 1200, target: 1000, efficiency: 85 },
+      { month: 'Feb', volume: 1400, target: 1200, efficiency: 92 },
+      { month: 'Mar', volume: 1800, target: 1500, efficiency: 95 },
+      { month: 'Apr', volume: 1600, target: 1400, efficiency: 88 },
+      { month: 'May', volume: 2000, target: 1800, efficiency: 96 },
+      { month: 'Jun', volume: 2200, target: 2000, efficiency: 98 }
+    ],
+    dailyTrends: [
+      { day: 'Mon', morning: 450, afternoon: 320, evening: 180 },
+      { day: 'Tue', morning: 480, afternoon: 340, evening: 200 },
+      { day: 'Wed', morning: 520, afternoon: 380, evening: 220 },
+      { day: 'Thu', morning: 490, afternoon: 360, evening: 190 },
+      { day: 'Fri', morning: 510, afternoon: 390, evening: 210 },
+      { day: 'Sat', morning: 580, afternoon: 420, evening: 250 },
+      { day: 'Sun', morning: 620, afternoon: 450, evening: 280 }
     ],
     membership: [
-      { category: 'Active', count: 450, color: '#22c55e' },
-      { category: 'Inactive', count: 80, color: '#ef4444' },
-      { category: 'Pending', count: 25, color: '#f59e0b' }
+      { category: 'Active Members', count: 450, percentage: 81, color: '#00ff88' },
+      { category: 'Inactive Members', count: 80, percentage: 14, color: '#ff4757' },
+      { category: 'Pending Applications', count: 25, percentage: 5, color: '#ffa502' }
     ],
     loanRisk: [
-      { risk: 'Low Risk', count: 120, color: '#22c55e' },
-      { risk: 'Medium Risk', count: 45, color: '#f59e0b' },
-      { risk: 'High Risk', count: 15, color: '#ef4444' }
+      { risk: 'Low Risk', count: 120, percentage: 67, color: '#00ff88', fill: 85 },
+      { risk: 'Medium Risk', count: 45, percentage: 25, color: '#ffa502', fill: 60 },
+      { risk: 'High Risk', count: 15, percentage: 8, color: '#ff4757', fill: 35 }
     ],
-    systemUsers: [
-      { role: 'Admin', count: 5, color: '#8b5cf6' },
-      { role: 'Manager', count: 12, color: '#3b82f6' },
-      { role: 'Member', count: 450, color: '#22c55e' },
-      { role: 'Guest', count: 25, color: '#f59e0b' }
+    financialMetrics: [
+      { name: 'Savings', value: 190.34, target: 200, color: '#00ff88', percentage: 95 },
+      { name: 'Loans', value: 145.67, target: 180, color: '#3742fa', percentage: 81 },
+      { name: 'Revenue', value: 298.45, target: 300, color: '#ffa502', percentage: 99 },
+      { name: 'Expenses', value: 156.78, target: 150, color: '#ff4757', percentage: 105 }
     ]
   });
 
@@ -274,14 +282,13 @@ const ReportsPage = () => {
   };
 
   const chartConfig = {
-    volume: {
-      label: "Volume (Liters)",
-      color: "#22c55e",
-    },
-    count: {
-      label: "Count",
-      color: "#3b82f6",
-    },
+    volume: { label: "Volume (Liters)", color: "#00ff88" },
+    target: { label: "Target", color: "#3742fa" },
+    efficiency: { label: "Efficiency %", color: "#ffa502" },
+    morning: { label: "Morning", color: "#00ff88" },
+    afternoon: { label: "Afternoon", color: "#3742fa" },
+    evening: { label: "Evening", color: "#ff4757" },
+    count: { label: "Count", color: "#00ff88" }
   };
 
   return (
@@ -425,143 +432,288 @@ const ReportsPage = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="analytics" className="space-y-4">
+        <TabsContent value="analytics" className="space-y-6">
+          {/* Key Metrics Dashboard */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {analyticsData.financialMetrics.map((metric, index) => (
+              <Card key={metric.name} className="bg-slate-900 border-slate-700 text-white relative overflow-hidden">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-slate-400">{metric.name}</span>
+                    <div className={`w-2 h-2 rounded-full`} style={{ backgroundColor: metric.color }} />
+                  </div>
+                  <div className="space-y-2">
+                    <div className="text-2xl font-bold" style={{ color: metric.color }}>
+                      {metric.value}
+                      <span className="text-xs ml-1 text-slate-400">UGX M</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-slate-400">Target: {metric.target}M</span>
+                      <span className={metric.percentage >= 100 ? "text-green-400" : "text-yellow-400"}>
+                        {metric.percentage}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-800 rounded-full h-1">
+                      <div 
+                        className="h-1 rounded-full transition-all duration-500" 
+                        style={{ 
+                          width: `${Math.min(metric.percentage, 100)}%`,
+                          backgroundColor: metric.color 
+                        }}
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Main Analytics Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
+            {/* Enhanced Milk Collection Chart */}
+            <Card className="bg-slate-900 border-slate-700 text-white">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5" />
-                  Milk Collection Trends
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <BarChart3 className="h-5 w-5 text-cyan-400" />
+                  Milk Collection Performance
                 </CardTitle>
-                <CardDescription>Monthly milk collection data with live updates</CardDescription>
+                <CardDescription className="text-slate-400">
+                  Monthly collection vs targets with efficiency tracking
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <ChartContainer config={chartConfig} className="h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={analyticsData.milkCollection}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="month" />
-                      <YAxis />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Bar dataKey="volume" fill="var(--color-volume)" />
-                    </BarChart>
+                    <AreaChart data={analyticsData.milkCollection}>
+                      <defs>
+                        <linearGradient id="volumeGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#00ff88" stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor="#00ff88" stopOpacity={0.1}/>
+                        </linearGradient>
+                        <linearGradient id="targetGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#3742fa" stopOpacity={0.6}/>
+                          <stop offset="95%" stopColor="#3742fa" stopOpacity={0.1}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                      <XAxis dataKey="month" stroke="#9ca3af" />
+                      <YAxis stroke="#9ca3af" />
+                      <ChartTooltip 
+                        content={<ChartTooltipContent className="bg-slate-800 border-slate-600" />}
+                      />
+                      <Area 
+                        type="monotone" 
+                        dataKey="target" 
+                        stroke="#3742fa" 
+                        fillOpacity={1} 
+                        fill="url(#targetGradient)" 
+                        strokeWidth={2}
+                      />
+                      <Area 
+                        type="monotone" 
+                        dataKey="volume" 
+                        stroke="#00ff88" 
+                        fillOpacity={1} 
+                        fill="url(#volumeGradient)" 
+                        strokeWidth={3}
+                      />
+                    </AreaChart>
                   </ResponsiveContainer>
                 </ChartContainer>
               </CardContent>
             </Card>
 
-            <Card>
+            {/* Circular Progress Membership */}
+            <Card className="bg-slate-900 border-slate-700 text-white">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <PieChart className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Users className="h-5 w-5 text-purple-400" />
                   Membership Distribution
                 </CardTitle>
-                <CardDescription>Current membership status breakdown</CardDescription>
+                <CardDescription className="text-slate-400">
+                  Active membership status breakdown
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <ChartContainer config={chartConfig} className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RechartsPieChart>
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <RechartsPieChart data={analyticsData.membership} cx="50%" cy="50%" outerRadius={80}>
-                        {analyticsData.membership.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </RechartsPieChart>
-                    </RechartsPieChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
+                <div className="relative h-[300px] flex items-center justify-center">
+                  <div className="relative">
+                    {analyticsData.membership.map((item, index) => (
+                      <div key={item.category} className="absolute inset-0 flex items-center justify-center">
+                        <div 
+                          className="rounded-full border-4 transition-all duration-1000"
+                          style={{
+                            width: `${200 - index * 50}px`,
+                            height: `${200 - index * 50}px`,
+                            borderColor: item.color,
+                            borderTopColor: 'transparent',
+                            transform: `rotate(${(item.percentage / 100) * 360}deg)`,
+                            opacity: 0.8
+                          }}
+                        />
+                      </div>
+                    ))}
+                    <div className="absolute inset-0 flex items-center justify-center flex-col">
+                      <span className="text-3xl font-bold text-white">555</span>
+                      <span className="text-sm text-slate-400">Total Members</span>
+                    </div>
+                  </div>
+                  <div className="absolute bottom-4 left-4 space-y-2">
+                    {analyticsData.membership.map((item) => (
+                      <div key={item.category} className="flex items-center gap-2">
+                        <div 
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: item.color }}
+                        />
+                        <span className="text-xs text-slate-300">{item.category}</span>
+                        <span className="text-xs font-bold" style={{ color: item.color }}>
+                          {item.count}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            <Card>
+            {/* Daily Collection Trends */}
+            <Card className="bg-slate-900 border-slate-700 text-white">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5" />
-                  Loan Risk Assessment
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Activity className="h-5 w-5 text-green-400" />
+                  Daily Collection Patterns
                 </CardTitle>
-                <CardDescription>Current loan portfolio risk distribution</CardDescription>
+                <CardDescription className="text-slate-400">
+                  Morning, afternoon, and evening collection trends
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <ChartContainer config={chartConfig} className="h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={analyticsData.loanRisk} layout="horizontal">
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis type="number" />
-                      <YAxis dataKey="risk" type="category" />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Bar dataKey="count" fill="var(--color-count)" />
+                    <BarChart data={analyticsData.dailyTrends}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                      <XAxis dataKey="day" stroke="#9ca3af" />
+                      <YAxis stroke="#9ca3af" />
+                      <ChartTooltip 
+                        content={<ChartTooltipContent className="bg-slate-800 border-slate-600" />}
+                      />
+                      <Bar dataKey="morning" stackId="a" fill="#00ff88" radius={[0, 0, 0, 0]} />
+                      <Bar dataKey="afternoon" stackId="a" fill="#3742fa" radius={[0, 0, 0, 0]} />
+                      <Bar dataKey="evening" stackId="a" fill="#ff4757" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </ChartContainer>
               </CardContent>
             </Card>
 
-            <Card>
+            {/* Loan Risk Radial Chart */}
+            <Card className="bg-slate-900 border-slate-700 text-white">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="h-5 w-5" />
-                  System Users by Role
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Target className="h-5 w-5 text-yellow-400" />
+                  Loan Risk Assessment
                 </CardTitle>
-                <CardDescription>User distribution across different roles</CardDescription>
+                <CardDescription className="text-slate-400">
+                  Risk distribution with performance indicators
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <ChartContainer config={chartConfig} className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RechartsPieChart>
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <RechartsPieChart data={analyticsData.systemUsers} cx="50%" cy="50%" outerRadius={80}>
-                        {analyticsData.systemUsers.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </RechartsPieChart>
-                    </RechartsPieChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
+                <div className="h-[300px] flex items-center justify-center">
+                  <div className="grid grid-cols-1 gap-6 w-full">
+                    {analyticsData.loanRisk.map((risk, index) => (
+                      <div key={risk.risk} className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div 
+                            className="w-4 h-4 rounded-full"
+                            style={{ backgroundColor: risk.color }}
+                          />
+                          <span className="text-sm text-slate-300">{risk.risk}</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="flex-1 w-24 bg-slate-800 rounded-full h-2">
+                            <div 
+                              className="h-2 rounded-full transition-all duration-1000"
+                              style={{ 
+                                width: `${risk.fill}%`,
+                                backgroundColor: risk.color 
+                              }}
+                            />
+                          </div>
+                          <span className="text-sm font-bold" style={{ color: risk.color }}>
+                            {risk.count}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
 
-          <Card>
+          {/* Real-time Statistics with modern design */}
+          <Card className="bg-slate-900 border-slate-700 text-white">
             <CardHeader>
-              <CardTitle>Real-time Statistics</CardTitle>
-              <CardDescription>Live updates from the latest report generation</CardDescription>
+              <CardTitle className="text-white">Real-time Performance Dashboard</CardTitle>
+              <CardDescription className="text-slate-400">
+                Live updates from the latest report generation
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4 text-green-600" />
-                    <span className="text-sm font-medium">Active Members</span>
+                <div className="bg-gradient-to-r from-green-500/20 to-green-600/20 p-4 rounded-lg border border-green-500/30">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Users className="h-5 w-5 text-green-400" />
+                      <span className="text-sm font-medium text-green-300">Active Members</span>
+                    </div>
+                    <TrendingUp className="h-4 w-4 text-green-400" />
                   </div>
-                  <span className="text-lg font-bold text-green-600">
-                    {analyticsData.membership.find(m => m.category === 'Active')?.count || 0}
-                  </span>
+                  <div className="mt-2">
+                    <span className="text-2xl font-bold text-green-400">450</span>
+                    <span className="text-xs text-green-300 ml-2">+12 this month</span>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <Milk className="h-4 w-4 text-blue-600" />
-                    <span className="text-sm font-medium">Latest Collection</span>
+
+                <div className="bg-gradient-to-r from-blue-500/20 to-blue-600/20 p-4 rounded-lg border border-blue-500/30">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Milk className="h-5 w-5 text-blue-400" />
+                      <span className="text-sm font-medium text-blue-300">Daily Collection</span>
+                    </div>
+                    <TrendingUp className="h-4 w-4 text-blue-400" />
                   </div>
-                  <span className="text-lg font-bold text-blue-600">
-                    {analyticsData.milkCollection[analyticsData.milkCollection.length - 1]?.volume || 0}L
-                  </span>
+                  <div className="mt-2">
+                    <span className="text-2xl font-bold text-blue-400">2,200L</span>
+                    <span className="text-xs text-blue-300 ml-2">+8% vs yesterday</span>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                    <span className="text-sm font-medium">High Risk Loans</span>
+
+                <div className="bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 p-4 rounded-lg border border-yellow-500/30">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="h-5 w-5 text-yellow-400" />
+                      <span className="text-sm font-medium text-yellow-300">High Risk Loans</span>
+                    </div>
+                    <TrendingUp className="h-4 w-4 text-yellow-400 rotate-180" />
                   </div>
-                  <span className="text-lg font-bold text-yellow-600">
-                    {analyticsData.loanRisk.find(l => l.risk === 'High Risk')?.count || 0}
-                  </span>
+                  <div className="mt-2">
+                    <span className="text-2xl font-bold text-yellow-400">15</span>
+                    <span className="text-xs text-yellow-300 ml-2">-3 this month</span>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-purple-600" />
-                    <span className="text-sm font-medium">Total Savings</span>
+
+                <div className="bg-gradient-to-r from-purple-500/20 to-purple-600/20 p-4 rounded-lg border border-purple-500/30">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <DollarSign className="h-5 w-5 text-purple-400" />
+                      <span className="text-sm font-medium text-purple-300">Total Savings</span>
+                    </div>
+                    <TrendingUp className="h-4 w-4 text-purple-400" />
                   </div>
-                  <span className="text-lg font-bold text-purple-600">UGX 45M</span>
+                  <div className="mt-2">
+                    <span className="text-2xl font-bold text-purple-400">190.34M</span>
+                    <span className="text-xs text-purple-300 ml-2">UGX</span>
+                  </div>
                 </div>
               </div>
             </CardContent>
