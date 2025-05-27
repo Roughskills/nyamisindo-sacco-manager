@@ -19,6 +19,49 @@ interface ReportViewModalProps {
   reportName: string;
 }
 
+// Define types for different report data structures
+interface UserData {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  joinDate: string;
+  lastLogin: string;
+}
+
+interface MilkData {
+  id: number;
+  farmerName: string;
+  date: string;
+  morning: number;
+  afternoon: number;
+  evening: number;
+  total: number;
+  quality: string;
+}
+
+interface LoanData {
+  id: number;
+  memberName: string;
+  amount: number;
+  dueDate: string;
+  daysOverdue: number;
+  status: string;
+  risk: string;
+}
+
+interface SavingsData {
+  id: number;
+  memberName: string;
+  accountNo: string;
+  balance: number;
+  lastDeposit: string;
+  status: string;
+}
+
+type ReportData = UserData | MilkData | LoanData | SavingsData;
+
 const ReportViewModal = ({ isOpen, onClose, reportId, reportName }: ReportViewModalProps) => {
   const [dateFrom, setDateFrom] = useState<Date>();
   const [dateTo, setDateTo] = useState<Date>();
@@ -28,8 +71,8 @@ const ReportViewModal = ({ isOpen, onClose, reportId, reportName }: ReportViewMo
   const itemsPerPage = 10;
 
   // Mock data for different report types
-  const mockData = useMemo(() => {
-    const userData = [
+  const mockData = useMemo((): ReportData[] => {
+    const userData: UserData[] = [
       { id: 1, name: "John Doe", email: "john@coop.com", role: "Admin", status: "Active", joinDate: "2024-01-15", lastLogin: "2024-01-20" },
       { id: 2, name: "Jane Smith", email: "jane@coop.com", role: "Manager", status: "Active", joinDate: "2024-01-10", lastLogin: "2024-01-19" },
       { id: 3, name: "Bob Wilson", email: "bob@coop.com", role: "Member", status: "Inactive", joinDate: "2024-01-05", lastLogin: "2024-01-15" },
@@ -37,7 +80,7 @@ const ReportViewModal = ({ isOpen, onClose, reportId, reportName }: ReportViewMo
       { id: 5, name: "Tom Johnson", email: "tom@coop.com", role: "Member", status: "Pending", joinDate: "2024-01-18", lastLogin: "Never" },
     ];
 
-    const milkData = [
+    const milkData: MilkData[] = [
       { id: 1, farmerName: "James Okello", date: "2024-01-20", morning: 45, afternoon: 32, evening: 18, total: 95, quality: "Grade A" },
       { id: 2, farmerName: "Mary Akinyi", date: "2024-01-20", morning: 38, afternoon: 28, evening: 15, total: 81, quality: "Grade A" },
       { id: 3, farmerName: "Peter Wanjiku", date: "2024-01-20", morning: 52, afternoon: 35, evening: 22, total: 109, quality: "Grade B" },
@@ -45,7 +88,7 @@ const ReportViewModal = ({ isOpen, onClose, reportId, reportName }: ReportViewMo
       { id: 5, farmerName: "David Kiprotich", date: "2024-01-20", morning: 47, afternoon: 33, evening: 19, total: 99, quality: "Grade A" },
     ];
 
-    const loanData = [
+    const loanData: LoanData[] = [
       { id: 1, memberName: "Samuel Ochieng", amount: 50000, dueDate: "2024-02-15", daysOverdue: 5, status: "Overdue", risk: "Medium" },
       { id: 2, memberName: "Rebecca Nyong", amount: 75000, dueDate: "2024-02-20", daysOverdue: 0, status: "Current", risk: "Low" },
       { id: 3, memberName: "Michael Kamau", amount: 120000, dueDate: "2024-01-30", daysOverdue: 15, status: "Overdue", risk: "High" },
@@ -53,7 +96,7 @@ const ReportViewModal = ({ isOpen, onClose, reportId, reportName }: ReportViewMo
       { id: 5, memberName: "Joseph Mbugua", amount: 85000, dueDate: "2024-02-10", daysOverdue: 10, status: "Overdue", risk: "High" },
     ];
 
-    const savingsData = [
+    const savingsData: SavingsData[] = [
       { id: 1, memberName: "Catherine Njeri", accountNo: "SAV001", balance: 125000, lastDeposit: "2024-01-18", status: "Active" },
       { id: 2, memberName: "Francis Mutua", accountNo: "SAV002", balance: 85000, lastDeposit: "2024-01-20", status: "Active" },
       { id: 3, memberName: "Margaret Achieng", accountNo: "SAV003", balance: 200000, lastDeposit: "2024-01-15", status: "Active" },
@@ -77,6 +120,23 @@ const ReportViewModal = ({ isOpen, onClose, reportId, reportName }: ReportViewMo
     }
   }, [reportId]);
 
+  // Type guards
+  const isUserData = (item: ReportData): item is UserData => {
+    return 'email' in item;
+  };
+
+  const isMilkData = (item: ReportData): item is MilkData => {
+    return 'farmerName' in item;
+  };
+
+  const isLoanData = (item: ReportData): item is LoanData => {
+    return 'risk' in item;
+  };
+
+  const isSavingsData = (item: ReportData): item is SavingsData => {
+    return 'accountNo' in item;
+  };
+
   // Filter data based on search term and status
   const filteredData = useMemo(() => {
     return mockData.filter(item => {
@@ -86,11 +146,11 @@ const ReportViewModal = ({ isOpen, onClose, reportId, reportName }: ReportViewMo
       
       let matchesStatus = true;
       if (statusFilter !== 'all') {
-        if ('status' in item) {
+        if (isUserData(item) || isSavingsData(item)) {
           matchesStatus = item.status.toLowerCase() === statusFilter.toLowerCase();
-        } else if ('quality' in item) {
+        } else if (isMilkData(item)) {
           matchesStatus = item.quality.toLowerCase().includes(statusFilter.toLowerCase());
-        } else if ('risk' in item) {
+        } else if (isLoanData(item)) {
           matchesStatus = item.risk.toLowerCase() === statusFilter.toLowerCase();
         }
       }
@@ -140,64 +200,60 @@ const ReportViewModal = ({ isOpen, onClose, reportId, reportName }: ReportViewMo
     }
   };
 
-  const renderTableRow = (item: any, index: number) => {
-    switch (reportId) {
-      case 'system-users':
-      case 'membership':
-        return (
-          <TableRow key={item.id}>
-            <TableCell className="font-medium">{item.name}</TableCell>
-            <TableCell>{item.email}</TableCell>
-            <TableCell>{item.role}</TableCell>
-            <TableCell>{getStatusBadge(item.status)}</TableCell>
-            <TableCell>{item.joinDate}</TableCell>
-            <TableCell>{item.lastLogin}</TableCell>
-          </TableRow>
-        );
-      case 'daily-milk':
-        return (
-          <TableRow key={item.id}>
-            <TableCell className="font-medium">{item.farmerName}</TableCell>
-            <TableCell>{item.date}</TableCell>
-            <TableCell>{item.morning}</TableCell>
-            <TableCell>{item.afternoon}</TableCell>
-            <TableCell>{item.evening}</TableCell>
-            <TableCell className="font-medium">{item.total}</TableCell>
-            <TableCell>{getStatusBadge(item.quality)}</TableCell>
-          </TableRow>
-        );
-      case 'loans-overdue':
-      case 'loan-risk':
-        return (
-          <TableRow key={item.id}>
-            <TableCell className="font-medium">{item.memberName}</TableCell>
-            <TableCell>{item.amount.toLocaleString()}</TableCell>
-            <TableCell>{item.dueDate}</TableCell>
-            <TableCell>{item.daysOverdue}</TableCell>
-            <TableCell>{getStatusBadge(item.status)}</TableCell>
-            <TableCell>{getStatusBadge(item.risk)}</TableCell>
-          </TableRow>
-        );
-      case 'savings':
-        return (
-          <TableRow key={item.id}>
-            <TableCell className="font-medium">{item.memberName}</TableCell>
-            <TableCell>{item.accountNo}</TableCell>
-            <TableCell>{item.balance.toLocaleString()}</TableCell>
-            <TableCell>{item.lastDeposit}</TableCell>
-            <TableCell>{getStatusBadge(item.status)}</TableCell>
-          </TableRow>
-        );
-      default:
-        return (
-          <TableRow key={item.id}>
-            <TableCell>{item.name}</TableCell>
-            <TableCell>{item.email}</TableCell>
-            <TableCell>{item.role}</TableCell>
-            <TableCell>{getStatusBadge(item.status)}</TableCell>
-          </TableRow>
-        );
+  const renderTableRow = (item: ReportData, index: number) => {
+    if (isUserData(item)) {
+      return (
+        <TableRow key={item.id}>
+          <TableCell className="font-medium">{item.name}</TableCell>
+          <TableCell>{item.email}</TableCell>
+          <TableCell>{item.role}</TableCell>
+          <TableCell>{getStatusBadge(item.status)}</TableCell>
+          <TableCell>{item.joinDate}</TableCell>
+          <TableCell>{item.lastLogin}</TableCell>
+        </TableRow>
+      );
     }
+
+    if (isMilkData(item)) {
+      return (
+        <TableRow key={item.id}>
+          <TableCell className="font-medium">{item.farmerName}</TableCell>
+          <TableCell>{item.date}</TableCell>
+          <TableCell>{item.morning}</TableCell>
+          <TableCell>{item.afternoon}</TableCell>
+          <TableCell>{item.evening}</TableCell>
+          <TableCell className="font-medium">{item.total}</TableCell>
+          <TableCell>{getStatusBadge(item.quality)}</TableCell>
+        </TableRow>
+      );
+    }
+
+    if (isLoanData(item)) {
+      return (
+        <TableRow key={item.id}>
+          <TableCell className="font-medium">{item.memberName}</TableCell>
+          <TableCell>{item.amount.toLocaleString()}</TableCell>
+          <TableCell>{item.dueDate}</TableCell>
+          <TableCell>{item.daysOverdue}</TableCell>
+          <TableCell>{getStatusBadge(item.status)}</TableCell>
+          <TableCell>{getStatusBadge(item.risk)}</TableCell>
+        </TableRow>
+      );
+    }
+
+    if (isSavingsData(item)) {
+      return (
+        <TableRow key={item.id}>
+          <TableCell className="font-medium">{item.memberName}</TableCell>
+          <TableCell>{item.accountNo}</TableCell>
+          <TableCell>{item.balance.toLocaleString()}</TableCell>
+          <TableCell>{item.lastDeposit}</TableCell>
+          <TableCell>{getStatusBadge(item.status)}</TableCell>
+        </TableRow>
+      );
+    }
+
+    return null;
   };
 
   const getFilterOptions = () => {
