@@ -34,7 +34,7 @@ const Sidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
     { id: "payments", label: "Payments", icon: CreditCard },
     { id: "members", label: "Members", icon: Users },
     { id: "account", label: "Account Management", icon: User },
-    { id: "registration", label: "Member Registration", icon: UserPlus },
+    { id: "registration", label: "Member Enrollment", icon: UserPlus },
     { id: "reports", label: "Reports", icon: FileText },
     { id: "notifications", label: "Notifications & Messages", icon: Bell },
     { id: "admin", label: "System Admin", icon: Settings },

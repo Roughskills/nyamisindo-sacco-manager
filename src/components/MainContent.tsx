@@ -12,6 +12,7 @@ import NotificationsPage from "./NotificationsPage";
 import ReportsPage from "./ReportsPage";
 import SystemAdminPage from "./SystemAdminPage";
 import SettingsPage from "./SettingsPage";
+import MemberEnrollmentPage from "./MemberEnrollmentPage";
 
 interface MainContentProps {
   activeTab: string;
@@ -52,14 +53,7 @@ const MainContent = ({ activeTab }: MainContentProps) => {
       return <AccountManagementPage />;
     
     case "registration":
-      return (
-        <PlaceholderCard
-          title="Member Registration"
-          description="Register new cooperative members"
-          featureName="Member Registration"
-          buttonText="Start Registration"
-        />
-      );
+      return <MemberEnrollmentPage />;
     
     case "reports":
       return <ReportsPage />;
