@@ -9,6 +9,7 @@ import MembersPage from "./MembersPage";
 import AccountManagementPage from "./AccountManagementPage";
 import PaymentManagement from "./PaymentManagement";
 import NotificationsPage from "./NotificationsPage";
+import ReportsPage from "./ReportsPage";
 
 interface MainContentProps {
   activeTab: string;
@@ -59,19 +60,9 @@ const MainContent = ({ activeTab }: MainContentProps) => {
       );
     
     case "reports":
-      return (
-        <PlaceholderCard
-          title="Reports"
-          description="Generate and view system reports"
-          featureName="Reports & Analytics"
-          buttonText="Generate Reports"
-        />
-      );
+      return <ReportsPage />;
     
     case "notifications":
-      return <NotificationsPage />;
-    
-    case "messages":
       return <NotificationsPage />;
     
     case "admin":
