@@ -51,17 +51,9 @@ const MemberCard = ({ member }: MemberCardProps) => {
     }
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-UG', {
-      style: 'currency',
-      currency: 'UGX',
-      minimumFractionDigits: 0
-    }).format(amount);
-  };
-
   // Calculate mock values for the new fields
-  const totalSavings = member.totalPayments * 0.15; // 15% of total payments as savings
-  const dailySaving = totalSavings / 365; // Daily average
+  const totalSavings = Math.round(member.totalPayments * 0.15); // 15% of total payments as savings
+  const dailySaving = Math.round(totalSavings / 365); // Daily average
   const distributionScore = Math.min(95, Math.floor(70 + (member.totalMilkSubmissions / 100))); // Score based on submissions
 
   return (
@@ -139,7 +131,7 @@ const MemberCard = ({ member }: MemberCardProps) => {
                 <span className="text-xs font-medium text-green-800">Payments</span>
               </div>
               <p className="text-sm font-bold text-green-600">
-                {formatCurrency(member.totalPayments)}
+                {member.totalPayments.toLocaleString()}
               </p>
             </div>
             
@@ -157,7 +149,7 @@ const MemberCard = ({ member }: MemberCardProps) => {
                 <span className="text-xs font-medium text-emerald-800">Total Savings</span>
               </div>
               <p className="text-sm font-bold text-emerald-600">
-                {formatCurrency(totalSavings)}
+                {totalSavings.toLocaleString()}
               </p>
             </div>
             
@@ -167,7 +159,7 @@ const MemberCard = ({ member }: MemberCardProps) => {
                 <span className="text-xs font-medium text-cyan-800">Daily Saving</span>
               </div>
               <p className="text-sm font-bold text-cyan-600">
-                {formatCurrency(dailySaving)}
+                {dailySaving.toLocaleString()}
               </p>
             </div>
             
