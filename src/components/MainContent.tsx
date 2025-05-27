@@ -10,6 +10,7 @@ import AccountManagementPage from "./AccountManagementPage";
 import PaymentManagement from "./PaymentManagement";
 import NotificationsPage from "./NotificationsPage";
 import ReportsPage from "./ReportsPage";
+import SystemAdminPage from "./SystemAdminPage";
 
 interface MainContentProps {
   activeTab: string;
@@ -66,14 +67,7 @@ const MainContent = ({ activeTab }: MainContentProps) => {
       return <NotificationsPage />;
     
     case "admin":
-      return (
-        <PlaceholderCard
-          title="System Admin"
-          description="System administration and management"
-          featureName="System Administration"
-          buttonText="Admin Panel"
-        />
-      );
+      return <SystemAdminPage />;
     
     case "settings":
       return (
