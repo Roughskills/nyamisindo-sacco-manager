@@ -4,52 +4,71 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Plus, Users, TrendingUp, Calendar } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Search, Plus, Users, TrendingUp, Calendar, Phone, MapPin, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface Farmer {
   id: number;
   name: string;
-  milkProduction: number;
-  lastSubmission: string;
-  quality: "High" | "Medium" | "Low";
+  phone: string;
+  location: string;
+  farmSize: string;
+  profileImage: string;
+  status: "Active" | "Inactive";
+  joinDate: string;
 }
 
 const farmersData: Farmer[] = [
   {
     id: 1,
     name: "John Doe",
-    milkProduction: 65,
-    lastSubmission: "2024-03-15",
-    quality: "High",
+    phone: "+256 701 234567",
+    location: "Kampala, Uganda",
+    farmSize: "5 acres",
+    profileImage: "/lovable-uploads/32cc625f-c0ad-42ea-ade9-1bf9d73d9ed0.png",
+    status: "Active",
+    joinDate: "2024-01-15",
   },
   {
     id: 2,
     name: "Jane Smith",
-    milkProduction: 50,
-    lastSubmission: "2024-03-15",
-    quality: "Medium",
+    phone: "+256 702 345678",
+    location: "Entebbe, Uganda",
+    farmSize: "3 acres",
+    profileImage: "/lovable-uploads/39bf3300-da67-4e46-aa6e-89ee8efaba00.png",
+    status: "Active",
+    joinDate: "2024-02-20",
   },
   {
     id: 3,
     name: "Alice Johnson",
-    milkProduction: 72,
-    lastSubmission: "2024-03-14",
-    quality: "High",
+    phone: "+256 703 456789",
+    location: "Jinja, Uganda",
+    farmSize: "7 acres",
+    profileImage: "/lovable-uploads/40e63c42-bf7a-4837-82b2-a3ed1de37147.png",
+    status: "Active",
+    joinDate: "2024-01-10",
   },
   {
     id: 4,
     name: "Bob Williams",
-    milkProduction: 45,
-    lastSubmission: "2024-03-14",
-    quality: "Low",
+    phone: "+256 704 567890",
+    location: "Mbarara, Uganda",
+    farmSize: "4 acres",
+    profileImage: "/lovable-uploads/4f5c5c7a-a091-4327-a01f-8a9ed50b0e17.png",
+    status: "Inactive",
+    joinDate: "2024-03-05",
   },
   {
     id: 5,
     name: "Charlie Brown",
-    milkProduction: 58,
-    lastSubmission: "2024-03-13",
-    quality: "Medium",
+    phone: "+256 705 678901",
+    location: "Gulu, Uganda",
+    farmSize: "6 acres",
+    profileImage: "/lovable-uploads/5270e3a7-68c7-4872-8bb8-3577295649b2.png",
+    status: "Active",
+    joinDate: "2024-02-12",
   },
 ];
 
@@ -58,15 +77,9 @@ const FarmerList = () => {
   const { toast } = useToast();
 
   const filteredFarmers = farmersData.filter((farmer) =>
-    farmer.name.toLowerCase().includes(searchQuery.toLowerCase())
+    farmer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    farmer.location.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const handleSubmission = () => {
-    toast({
-      title: "Milk Submission",
-      description: "Successfully recorded milk submission!",
-    });
-  };
 
   return (
     <div className="space-y-6">
@@ -74,7 +87,7 @@ const FarmerList = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold text-green-800">Milk Analytics</h2>
-          <p className="text-gray-600">Track farmer submissions and milk production</p>
+          <p className="text-gray-600">Track farmer profiles and member information</p>
         </div>
         <div className="flex gap-2">
           <Button 
@@ -96,35 +109,35 @@ const FarmerList = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{farmersData.length}</div>
-            <p className="text-sm text-gray-500">Active farmers</p>
+            <p className="text-sm text-gray-500">Registered farmers</p>
           </CardContent>
         </Card>
 
         <Card className="bg-white shadow-md border-0">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Average Milk Production
+              Active Farmers
             </CardTitle>
             <TrendingUp className="h-4 w-4 text-gray-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {farmersData.reduce((acc, farmer) => acc + farmer.milkProduction, 0) /
-                farmersData.length}
-              L
+              {farmersData.filter(farmer => farmer.status === "Active").length}
             </div>
-            <p className="text-sm text-gray-500">Per day</p>
+            <p className="text-sm text-gray-500">Currently active</p>
           </CardContent>
         </Card>
 
         <Card className="bg-white shadow-md border-0">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Latest Submission</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Farm Area</CardTitle>
             <Calendar className="h-4 w-4 text-gray-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">Today</div>
-            <p className="text-sm text-gray-500">Most recent</p>
+            <div className="text-2xl font-bold">
+              {farmersData.reduce((total, farmer) => total + parseInt(farmer.farmSize), 0)} acres
+            </div>
+            <p className="text-sm text-gray-500">Combined area</p>
           </CardContent>
         </Card>
       </div>
@@ -133,7 +146,7 @@ const FarmerList = () => {
       <div className="relative">
         <Input
           type="text"
-          placeholder="Search farmers..."
+          placeholder="Search farmers by name or location..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-10 shadow-sm"
@@ -149,55 +162,64 @@ const FarmerList = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Name
+                Farmer
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Milk Production
+                Phone Number
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Last Submission
+                Location
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Quality
+                Farm Size
               </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
               </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredFarmers.map((farmer) => (
-              <tr key={farmer.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {farmer.name}
+              <tr key={farmer.id} className="hover:bg-gray-50">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <Avatar className="h-10 w-10 mr-3">
+                      <AvatarImage src={farmer.profileImage} alt={farmer.name} />
+                      <AvatarFallback className="bg-green-100 text-green-800">
+                        {farmer.name.split(' ').map(n => n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">{farmer.name}</div>
+                      <div className="text-sm text-gray-500">ID: {farmer.id}</div>
+                    </div>
+                  </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {farmer.milkProduction} L
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center text-sm text-gray-900">
+                    <Phone className="w-4 h-4 mr-2 text-gray-400" />
+                    {farmer.phone}
+                  </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {farmer.lastSubmission}
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center text-sm text-gray-900">
+                    <MapPin className="w-4 h-4 mr-2 text-gray-400" />
+                    {farmer.location}
+                  </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {farmer.farmSize}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
                   <Badge
                     className={
-                      farmer.quality === "High"
+                      farmer.status === "Active"
                         ? "bg-green-100 text-green-800"
-                        : farmer.quality === "Medium"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-red-100 text-red-800"
+                        : "bg-gray-100 text-gray-800"
                     }
                   >
-                    {farmer.quality}
+                    {farmer.status}
                   </Badge>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <Button
-                    variant="outline"
-                    onClick={handleSubmission}
-                    className="bg-blue-500 text-white hover:bg-blue-700"
-                  >
-                    Record Submission
-                  </Button>
                 </td>
               </tr>
             ))}
