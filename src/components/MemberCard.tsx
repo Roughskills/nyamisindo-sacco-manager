@@ -119,7 +119,7 @@ const MemberCard = ({ member }: MemberCardProps) => {
           <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 mb-6 py-4 border-y border-gray-200">
             <div className="bg-blue-50 p-3 rounded-lg text-center">
               <div className="flex items-center justify-center mb-1">
-                <Milk className="w-4 h-4 text-blue-600 mr-1" />
+                <Milk className="w-5 h-5 text-blue-600 mr-1" />
                 <span className="text-xs font-medium text-blue-800">Total Milk</span>
               </div>
               <p className="text-lg font-bold text-blue-600">{member.totalMilkSubmissions}L</p>
@@ -127,7 +127,7 @@ const MemberCard = ({ member }: MemberCardProps) => {
             
             <div className="bg-green-50 p-3 rounded-lg text-center">
               <div className="flex items-center justify-center mb-1">
-                <Banknote className="w-4 h-4 text-green-600 mr-1" />
+                <Banknote className="w-5 h-5 text-green-600 mr-1" />
                 <span className="text-xs font-medium text-green-800">Payments</span>
               </div>
               <p className="text-sm font-bold text-green-600">
@@ -137,7 +137,7 @@ const MemberCard = ({ member }: MemberCardProps) => {
             
             <div className="bg-orange-50 p-3 rounded-lg text-center">
               <div className="flex items-center justify-center mb-1">
-                <FileText className="w-4 h-4 text-orange-600 mr-1" />
+                <FileText className="w-5 h-5 text-orange-600 mr-1" />
                 <span className="text-xs font-medium text-orange-800">Vouchers</span>
               </div>
               <p className="text-lg font-bold text-orange-600">{member.processedVouchers}</p>
@@ -145,7 +145,7 @@ const MemberCard = ({ member }: MemberCardProps) => {
 
             <div className="bg-emerald-50 p-3 rounded-lg text-center">
               <div className="flex items-center justify-center mb-1">
-                <PiggyBank className="w-4 h-4 text-emerald-600 mr-1" />
+                <PiggyBank className="w-5 h-5 text-emerald-600 mr-1" />
                 <span className="text-xs font-medium text-emerald-800">Total Savings</span>
               </div>
               <p className="text-sm font-bold text-emerald-600">
@@ -155,7 +155,7 @@ const MemberCard = ({ member }: MemberCardProps) => {
             
             <div className="bg-cyan-50 p-3 rounded-lg text-center">
               <div className="flex items-center justify-center mb-1">
-                <TrendingUp className="w-4 h-4 text-cyan-600 mr-1" />
+                <TrendingUp className="w-5 h-5 text-cyan-600 mr-1" />
                 <span className="text-xs font-medium text-cyan-800">Daily Saving</span>
               </div>
               <p className="text-sm font-bold text-cyan-600">
@@ -165,7 +165,7 @@ const MemberCard = ({ member }: MemberCardProps) => {
             
             <div className="bg-purple-50 p-3 rounded-lg text-center">
               <div className="flex items-center justify-center mb-1">
-                <Award className="w-4 h-4 text-purple-600 mr-1" />
+                <Award className="w-5 h-5 text-purple-600 mr-1" />
                 <span className="text-xs font-medium text-purple-800">Distribution</span>
               </div>
               <p className="text-lg font-bold text-purple-600">{distributionScore}%</p>
