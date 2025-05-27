@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -392,9 +393,9 @@ const AccountManagementPage = () => {
                               {member.accountStatus.charAt(0).toUpperCase() + member.accountStatus.slice(1)}
                             </Badge>
                           </div>
-                          <p className="text-sm font-medium">Savings: {member.savingsBalance.toLocaleString()} RWF</p>
+                          <p className="text-sm font-medium">Savings: {member.savingsBalance.toLocaleString()}</p>
                           {member.loanBalance > 0 && (
-                            <p className="text-sm text-red-600">Loan: {member.loanBalance.toLocaleString()} RWF</p>
+                            <p className="text-sm text-red-600">Loan: {member.loanBalance.toLocaleString()}</p>
                           )}
                           <Button variant="outline" size="sm" className="mt-2">
                             <Eye className="h-3 w-3 mr-1" />
@@ -463,12 +464,12 @@ const AccountManagementPage = () => {
                       <div className="space-y-2">
                         <div className="p-3 bg-green-50 rounded-lg">
                           <p className="text-sm text-green-700">Savings Balance</p>
-                          <p className="text-xl font-bold text-green-800">{selectedMember.savingsBalance.toLocaleString()} RWF</p>
+                          <p className="text-xl font-bold text-green-800">{selectedMember.savingsBalance.toLocaleString()}</p>
                         </div>
                         {selectedMember.loanBalance > 0 && (
                           <div className="p-3 bg-red-50 rounded-lg">
                             <p className="text-sm text-red-700">Loan Balance</p>
-                            <p className="text-xl font-bold text-red-800">{selectedMember.loanBalance.toLocaleString()} RWF</p>
+                            <p className="text-xl font-bold text-red-800">{selectedMember.loanBalance.toLocaleString()}</p>
                           </div>
                         )}
                       </div>
@@ -494,11 +495,11 @@ const AccountManagementPage = () => {
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="text-center p-4 bg-blue-50 rounded-lg">
                           <h3 className="font-medium text-blue-900">Total Savings</h3>
-                          <p className="text-2xl font-bold text-blue-800">{selectedMember.savingsBalance.toLocaleString()} RWF</p>
+                          <p className="text-2xl font-bold text-blue-800">{selectedMember.savingsBalance.toLocaleString()}</p>
                         </div>
                         <div className="text-center p-4 bg-red-50 rounded-lg">
                           <h3 className="font-medium text-red-900">Outstanding Loans</h3>
-                          <p className="text-2xl font-bold text-red-800">{selectedMember.loanBalance.toLocaleString()} RWF</p>
+                          <p className="text-2xl font-bold text-red-800">{selectedMember.loanBalance.toLocaleString()}</p>
                         </div>
                         <div className="text-center p-4 bg-green-50 rounded-lg">
                           <h3 className="font-medium text-green-900">Last Transaction</h3>
@@ -549,9 +550,9 @@ const AccountManagementPage = () => {
                               </TableCell>
                               <TableCell className="font-mono text-sm">{transaction.reference}</TableCell>
                               <TableCell className={`text-right font-medium ${transaction.type === 'deposit' ? 'text-green-600' : 'text-red-600'}`}>
-                                {transaction.type === 'deposit' ? '+' : '-'}{transaction.amount.toLocaleString()} RWF
+                                {transaction.type === 'deposit' ? '+' : '-'}{transaction.amount.toLocaleString()}
                               </TableCell>
-                              <TableCell className="text-right font-medium">{transaction.balance.toLocaleString()} RWF</TableCell>
+                              <TableCell className="text-right font-medium">{transaction.balance.toLocaleString()}</TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
@@ -606,9 +607,9 @@ const AccountManagementPage = () => {
                                 </TableCell>
                                 <TableCell className="font-mono text-sm">{transaction.reference}</TableCell>
                                 <TableCell className={`text-right font-medium ${transaction.type === 'loan_disbursement' ? 'text-blue-600' : 'text-green-600'}`}>
-                                  {transaction.type === 'loan_disbursement' ? '+' : '-'}{transaction.amount.toLocaleString()} RWF
+                                  {transaction.type === 'loan_disbursement' ? '+' : '-'}{transaction.amount.toLocaleString()}
                                 </TableCell>
-                                <TableCell className="text-right font-medium">{transaction.balance.toLocaleString()} RWF</TableCell>
+                                <TableCell className="text-right font-medium">{transaction.balance.toLocaleString()}</TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
