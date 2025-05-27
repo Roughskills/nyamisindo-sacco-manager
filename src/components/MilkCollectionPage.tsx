@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, Plus, Users, TrendingUp, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import AddCollectionModal from "./AddCollectionModal";
 
 interface Farmer {
   id: number;
@@ -52,7 +54,7 @@ const farmersData: Farmer[] = [
   },
 ];
 
-const FarmerList = () => {
+const MilkCollectionPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { toast } = useToast();
 
@@ -72,10 +74,11 @@ const FarmerList = () => {
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-green-800">Milk Analytics</h2>
-          <p className="text-gray-600">Track farmer submissions and milk production</p>
+          <h2 className="text-2xl font-bold text-green-800">Milk Collection</h2>
+          <p className="text-gray-600">Record and manage milk collections from farmers</p>
         </div>
         <div className="flex gap-2">
+          <AddCollectionModal />
           <Button 
             onClick={() => window.location.href = '/add-farmer'}
             className="bg-green-600 hover:bg-green-700"
@@ -207,4 +210,4 @@ const FarmerList = () => {
   );
 };
 
-export default FarmerList;
+export default MilkCollectionPage;

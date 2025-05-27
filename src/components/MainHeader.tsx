@@ -1,5 +1,5 @@
 
-import { BarChart3, Users, Milk, User, UserPlus, Bell, MessageSquare } from "lucide-react";
+import { BarChart3, Users, Milk, User, UserPlus, Bell, MessageSquare, Droplets } from "lucide-react";
 
 interface MainHeaderProps {
   activeTab: string;
@@ -10,6 +10,8 @@ const MainHeader = ({ activeTab }: MainHeaderProps) => {
     switch (activeTab) {
       case "farmers":
         return <Milk className="w-8 h-8 text-green-600" />;
+      case "collection":
+        return <Droplets className="w-8 h-8 text-blue-600" />;
       case "dashboard":
         return <BarChart3 className="w-8 h-8 text-blue-600" />;
       case "loans":
@@ -43,6 +45,8 @@ const MainHeader = ({ activeTab }: MainHeaderProps) => {
         return "Dashboard Overview";
       case "farmers":
         return "Milk Analytics";
+      case "collection":
+        return "Milk Collection";
       case "loans":
         return "Loan Applications";
       case "payments":
@@ -74,6 +78,8 @@ const MainHeader = ({ activeTab }: MainHeaderProps) => {
         return "Monitor your cooperative's performance and activities";
       case "farmers":
         return "Track farmer submissions and milk production analytics";
+      case "collection":
+        return "Record and manage milk collections from farmers";
       case "loans":
         return "Manage loan applications and approvals";
       case "payments":

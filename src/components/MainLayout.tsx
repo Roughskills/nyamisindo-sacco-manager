@@ -14,6 +14,8 @@ const MainLayout = () => {
         return "Monitor your cooperative's performance and activities";
       case "farmers":
         return "Track farmer submissions and milk production analytics";
+      case "collection":
+        return "Record and manage milk collections from farmers";
       case "loans":
         return "Manage loan applications and approvals";
       case "payments":

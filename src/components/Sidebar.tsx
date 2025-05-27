@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -15,7 +16,8 @@ import {
   X,
   User,
   UserPlus,
-  Bell
+  Bell,
+  Droplets
 } from "lucide-react";
 
 interface SidebarProps {
@@ -30,6 +32,7 @@ const Sidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "farmers", label: "Milk Analytics", icon: BarChart3 },
+    { id: "collection", label: "Milk Collection", icon: Droplets },
     { id: "loans", label: "Loan Applications", icon: FileText },
     { id: "payments", label: "Payments", icon: CreditCard },
     { id: "members", label: "Members", icon: Users },

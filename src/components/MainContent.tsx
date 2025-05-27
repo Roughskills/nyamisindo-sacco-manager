@@ -1,6 +1,7 @@
 
 import DashboardContent from "./DashboardContent";
 import FarmerList from "./FarmerList";
+import MilkCollectionPage from "./MilkCollectionPage";
 import LoanTracker from "./LoanTracker";
 import MilkDistributionChart from "./MilkDistributionChart";
 import Chart3D from "./Chart3D";
@@ -39,6 +40,9 @@ const MainContent = ({ activeTab }: MainContentProps) => {
           </div>
         </div>
       );
+    
+    case "collection":
+      return <MilkCollectionPage />;
     
     case "loans":
       return <LoanTracker />;
