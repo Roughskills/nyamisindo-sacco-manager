@@ -10,7 +10,7 @@ import { Member } from "../types/member";
 
 const membersData: Member[] = [
   {
-    id: "M001",
+    id: "MEM001",
     name: "John Doe",
     phone: "+256 701 234567",
     email: "john.doe@email.com",
@@ -28,7 +28,7 @@ const membersData: Member[] = [
     nationalId: "CM12345678901234"
   },
   {
-    id: "M002",
+    id: "MEM002",
     name: "Jane Smith",
     phone: "+256 702 345678",
     email: "jane.smith@email.com",
@@ -46,7 +46,7 @@ const membersData: Member[] = [
     nationalId: "CM12345678901235"
   },
   {
-    id: "M003",
+    id: "MEM003",
     name: "Alice Johnson",
     phone: "+256 703 456789",
     email: "alice.johnson@email.com",
@@ -64,7 +64,7 @@ const membersData: Member[] = [
     nationalId: "CM12345678901236"
   },
   {
-    id: "M004",
+    id: "MEM004",
     name: "Bob Williams",
     phone: "+256 704 567890",
     email: "bob.williams@email.com",
@@ -82,7 +82,7 @@ const membersData: Member[] = [
     nationalId: "CM12345678901237"
   },
   {
-    id: "M005",
+    id: "MEM005",
     name: "Charlie Brown",
     phone: "+256 705 678901",
     email: "charlie.brown@email.com",
