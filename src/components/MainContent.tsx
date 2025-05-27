@@ -1,3 +1,4 @@
+
 import DashboardContent from "./DashboardContent";
 import FarmerList from "./FarmerList";
 import LoanTracker from "./LoanTracker";
@@ -7,6 +8,7 @@ import PlaceholderCard from "./PlaceholderCard";
 import MembersPage from "./MembersPage";
 import AccountManagementPage from "./AccountManagementPage";
 import PaymentManagement from "./PaymentManagement";
+import NotificationsPage from "./NotificationsPage";
 
 interface MainContentProps {
   activeTab: string;
@@ -67,24 +69,10 @@ const MainContent = ({ activeTab }: MainContentProps) => {
       );
     
     case "notifications":
-      return (
-        <PlaceholderCard
-          title="Notifications & Messages"
-          description="Manage system notifications and alerts"
-          featureName="Notification Center"
-          buttonText="View Notifications"
-        />
-      );
+      return <NotificationsPage />;
     
     case "messages":
-      return (
-        <PlaceholderCard
-          title="Messages"
-          description="Internal messaging system"
-          featureName="Message Center"
-          buttonText="View Messages"
-        />
-      );
+      return <NotificationsPage />;
     
     case "admin":
       return (
