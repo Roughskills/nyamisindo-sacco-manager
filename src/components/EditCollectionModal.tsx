@@ -89,7 +89,7 @@ const EditCollectionModal = ({ farmer, onUpdate }: EditCollectionModalProps) => 
 
           <div className="space-y-2">
             <Label htmlFor="quality">Quality</Label>
-            <Select value={formData.quality} onValueChange={(value) => setFormData({ ...formData, quality: value })}>
+            <Select value={formData.quality} onValueChange={(value) => setFormData({ ...formData, quality: value as "High" | "Medium" | "Low" })}>
               <SelectTrigger>
                 <SelectValue placeholder="Select quality" />
               </SelectTrigger>
