@@ -12,14 +12,78 @@ import {
 
 // Mock Permissions
 export const mockPermissions: Permission[] = [
-  { id: '1', name: 'Employee Management', resource: 'users', action: 'manage', description: 'Manage system users and employees' },
-  { id: '2', name: 'User Privileges', resource: 'roles', action: 'manage', description: 'Manage user roles and permissions' },
-  { id: '3', name: 'General Control', resource: 'system', action: 'view', description: 'General system access' },
-  { id: '4', name: 'Loans Control', resource: 'loans', action: 'manage', description: 'Manage farmer loans' },
-  { id: '5', name: 'Accounts Control', resource: 'accounts', action: 'manage', description: 'Manage farmer accounts' },
-  { id: '6', name: 'API Channels', resource: 'api', action: 'access', description: 'Access API endpoints' },
-  { id: '7', name: 'Reports Access', resource: 'reports', action: 'view', description: 'View and generate reports' },
-  { id: '8', name: 'System Configuration', resource: 'config', action: 'manage', description: 'Configure system settings' }
+  { 
+    id: '1', 
+    name: 'Employee Management', 
+    resource: 'users', 
+    action: 'manage', 
+    description: 'Manage system users and employees',
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  { 
+    id: '2', 
+    name: 'User Privileges', 
+    resource: 'roles', 
+    action: 'manage', 
+    description: 'Manage user roles and permissions',
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  { 
+    id: '3', 
+    name: 'General Control', 
+    resource: 'system', 
+    action: 'view', 
+    description: 'General system access',
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  { 
+    id: '4', 
+    name: 'Loans Control', 
+    resource: 'loans', 
+    action: 'manage', 
+    description: 'Manage farmer loans',
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  { 
+    id: '5', 
+    name: 'Accounts Control', 
+    resource: 'accounts', 
+    action: 'manage', 
+    description: 'Manage farmer accounts',
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  { 
+    id: '6', 
+    name: 'API Channels', 
+    resource: 'api', 
+    action: 'access', 
+    description: 'Access API endpoints',
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  { 
+    id: '7', 
+    name: 'Reports Access', 
+    resource: 'reports', 
+    action: 'view', 
+    description: 'View and generate reports',
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  },
+  { 
+    id: '8', 
+    name: 'System Configuration', 
+    resource: 'config', 
+    action: 'manage', 
+    description: 'Configure system settings',
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  }
 ];
 
 // Mock Roles
@@ -28,25 +92,33 @@ export const mockRoles: Role[] = [
     id: '1',
     name: 'Super Admin',
     description: 'Full system access',
-    permissions: mockPermissions
+    permissions: mockPermissions,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
   },
   {
     id: '2',
     name: 'Manager',
     description: 'Management level access',
-    permissions: mockPermissions.slice(0, 6)
+    permissions: mockPermissions.slice(0, 6),
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
   },
   {
     id: '3',
     name: 'Operator',
     description: 'Operational level access',
-    permissions: mockPermissions.slice(2, 5)
+    permissions: mockPermissions.slice(2, 5),
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
   },
   {
     id: '4',
     name: 'Viewer',
     description: 'Read-only access',
-    permissions: [mockPermissions[2], mockPermissions[6]]
+    permissions: [mockPermissions[2], mockPermissions[6]],
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
   }
 ];
 
@@ -59,6 +131,8 @@ export const mockUsers: User[] = [
     lastName: 'Admin',
     phone: '+250788123456',
     role: mockRoles[0],
+    permissions: mockRoles[0].permissions,
+    isActive: true,
     status: 'active',
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-15T10:30:00Z',
@@ -71,6 +145,8 @@ export const mockUsers: User[] = [
     lastName: 'Manager',
     phone: '+250788234567',
     role: mockRoles[1],
+    permissions: mockRoles[1].permissions,
+    isActive: true,
     status: 'active',
     createdAt: '2024-01-02T00:00:00Z',
     updatedAt: '2024-01-14T15:20:00Z',
@@ -200,7 +276,7 @@ export const mockLoans: Loan[] = [
     termMonths: 24,
     monthlyPayment: 23537,
     totalAmount: 564888,
-    status: 'active',
+    status: 'disbursed',
     applicationDate: '2024-01-01',
     approvalDate: '2024-01-05',
     disbursementDate: '2024-01-10',
@@ -219,8 +295,8 @@ export const mockNotifications: Notification[] = [
   {
     id: '1',
     userId: '1',
-    type: 'info',
-    category: 'milk_collection',
+    type: 'milk_collection',
+    category: 'info',
     title: 'New Milk Collection',
     message: 'Farmer Jean Muhire has submitted today\'s milk collection',
     isRead: false,
@@ -232,8 +308,8 @@ export const mockNotifications: Notification[] = [
   {
     id: '2',
     farmerId: '1',
-    type: 'success',
-    category: 'payment',
+    type: 'payment',
+    category: 'success',
     title: 'Payment Processed',
     message: 'Your milk payment of UGX 45,000 has been processed successfully',
     isRead: false,

@@ -1,3 +1,4 @@
+
 export interface ApiResponse<T> {
   success: boolean;
   data: T;
@@ -23,6 +24,8 @@ export interface QueryParams {
   limit?: number;
   sort?: string;
   search?: string;
+  startDate?: string;
+  endDate?: string;
   [key: string]: any;
 }
 
@@ -36,8 +39,10 @@ export interface User {
   role: Role;
   permissions: Permission[];
   isActive: boolean;
+  status: 'active' | 'inactive' | 'suspended';
   createdAt: string;
   updatedAt: string;
+  lastLoginAt?: string;
 }
 
 export interface Role {
@@ -53,6 +58,8 @@ export interface Permission {
   id: string;
   name: string;
   description?: string;
+  resource: string;
+  action: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -65,6 +72,7 @@ export interface LoginRequest {
 export interface LoginResponse {
   token: string;
   user: User;
+  expiresIn: number;
 }
 
 export interface RegisterRequest {
@@ -77,33 +85,49 @@ export interface RegisterRequest {
 
 export interface Farmer {
   id: string;
-  name: string;
-  phoneNumber: string;
-  address: string;
-  district: string;
+  personalInfo: {
+    firstName: string;
+    lastName: string;
+    nationalId: string;
+    phone: string;
+    email?: string;
+    dateOfBirth: string;
+    gender: 'male' | 'female';
+  };
+  address: {
+    district: string;
+    sector: string;
+    cell: string;
+    village: string;
+    coordinates?: {
+      latitude: number;
+      longitude: number;
+    };
+  };
+  farmInfo: {
+    farmSize: number;
+    numberOfCows: number;
+    farmingExperience: number;
+    farmType: 'dairy' | 'mixed' | 'other';
+  };
   membershipInfo: {
+    membershipId: string;
+    joinDate: string;
     status: 'active' | 'inactive' | 'pending';
-    dateJoined: string;
+    membershipType: 'individual' | 'group';
   };
-  milkProduction: {
-    dailyAverage: number;
-    totalProduction: number;
+  financialInfo: {
+    totalEarnings: number;
+    totalLoans: number;
+    creditScore: number;
+    paymentMethod: 'airtel' | 'mtn' | 'bank' | 'cash';
+    accountDetails: string;
   };
-  loanInfo?: {
-    loanAmount: number;
-    loanStatus: 'pending' | 'approved' | 'rejected';
-  };
-  paymentInfo?: {
-    accountNumber: string;
-    paymentHistory: Payment[];
-  };
-  documents?: {
-    nationalId?: string;
-    landTitle?: string;
-  };
-  kycInfo?: {
-    status: 'pending' | 'verified' | 'rejected';
-    notes?: string;
+  documents: {
+    profilePhoto?: string;
+    nationalIdPhoto?: string;
+    farmPhoto?: string;
+    kycStatus: 'pending' | 'verified' | 'rejected';
   };
   createdAt: string;
   updatedAt: string;
@@ -112,9 +136,31 @@ export interface Farmer {
 export interface MilkCollection {
   id: string;
   farmerId: string;
-  quantity: number;
-  date: string;
-  quality: 'good' | 'average' | 'poor';
+  farmer: Farmer;
+  collectionDate: string;
+  morningCollection?: {
+    quantity: number;
+    quality: 'A' | 'B' | 'C';
+    temperature: number;
+    density: number;
+    fatContent: number;
+    collectedBy: string;
+    collectionTime: string;
+  };
+  eveningCollection?: {
+    quantity: number;
+    quality: 'A' | 'B' | 'C';
+    temperature: number;
+    density: number;
+    fatContent: number;
+    collectedBy: string;
+    collectionTime: string;
+  };
+  totalQuantity: number;
+  averageQuality: 'A' | 'B' | 'C';
+  pricePerLiter: number;
+  totalAmount: number;
+  status: 'pending' | 'approved' | 'rejected';
   notes?: string;
   createdAt: string;
   updatedAt: string;
@@ -123,10 +169,19 @@ export interface MilkCollection {
 export interface Payment {
   id: string;
   farmerId: string;
+  farmer: Farmer;
   amount: number;
-  date: string;
-  method: 'mobile_money' | 'bank_transfer' | 'cash';
-  notes?: string;
+  paymentType: 'milk_payment' | 'loan_repayment' | 'bonus' | 'penalty';
+  paymentMethod: 'airtel' | 'mtn' | 'bank' | 'cash';
+  paymentDetails: {
+    reference?: string;
+    phoneNumber?: string;
+    accountNumber?: string;
+  };
+  status: 'pending' | 'completed' | 'failed' | 'cancelled';
+  description?: string;
+  processedDate?: string;
+  createdBy: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -134,11 +189,35 @@ export interface Payment {
 export interface Loan {
   id: string;
   farmerId: string;
-  amount: number;
+  farmer: Farmer;
+  loanType: 'equipment' | 'feed' | 'emergency' | 'development';
+  principalAmount: number;
   interestRate: number;
-  startDate: string;
-  endDate: string;
+  termMonths: number;
+  monthlyPayment: number;
+  totalAmount: number;
   status: 'pending' | 'approved' | 'rejected' | 'disbursed' | 'repaid';
+  applicationDate: string;
+  approvalDate?: string;
+  disbursementDate?: string;
+  dueDate: string;
+  collateral?: string;
+  repayments: LoanRepayment[];
+  createdBy: string;
+  approvedBy?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LoanRepayment {
+  id: string;
+  loanId: string;
+  amount: number;
+  dueDate: string;
+  paidDate?: string;
+  status: 'pending' | 'paid' | 'overdue';
+  paymentMethod?: 'airtel' | 'mtn' | 'bank' | 'cash';
+  reference?: string;
   notes?: string;
   createdAt: string;
   updatedAt: string;
@@ -151,10 +230,14 @@ export interface Notification {
   title: string;
   message: string;
   type: 'general' | 'milk_collection' | 'payment' | 'loan' | 'system';
+  category: 'info' | 'success' | 'warning' | 'error';
   priority: 'high' | 'medium' | 'low';
   isRead: boolean;
+  readAt?: string;
+  actionRequired?: boolean;
+  actionUrl?: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface ReportRequest {
@@ -184,6 +267,7 @@ export interface ReportResponse {
   status: 'pending' | 'processing' | 'completed' | 'failed';
   fileUrl?: string;
   createdAt: string;
+  expiresAt: string;
   updatedAt: string;
 }
 

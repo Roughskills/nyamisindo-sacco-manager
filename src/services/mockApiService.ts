@@ -121,7 +121,7 @@ export class MockApiService {
       farmerId: data.farmerId || '1',
       farmer: mockFarmers[0],
       collectionDate: data.collectionDate || new Date().toISOString().split('T')[0],
-      morningCollection: data.morningCollection!,
+      morningCollection: data.morningCollection,
       eveningCollection: data.eveningCollection,
       totalQuantity: (data.morningCollection?.quantity || 0) + (data.eveningCollection?.quantity || 0),
       averageQuality: data.morningCollection?.quality || 'A',

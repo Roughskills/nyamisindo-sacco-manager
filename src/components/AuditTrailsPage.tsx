@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,12 +14,13 @@ import { cn } from '@/lib/utils';
 import { AuditLog, AuditLogFilters } from '@/types/api';
 import { auditService } from '@/services/auditService';
 import { useToast } from '@/hooks/use-toast';
+import { DateRange } from 'react-day-picker';
 
 const AuditTrailsPage = () => {
   const { toast } = useToast();
   const [filters, setFilters] = useState<AuditLogFilters>({});
   const [searchTerm, setSearchTerm] = useState('');
-  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({});
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [selectedAction, setSelectedAction] = useState<string>('');
   const [selectedResource, setSelectedResource] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,8 +45,8 @@ const AuditTrailsPage = () => {
     const newFilters: AuditLogFilters = {
       ...(selectedAction && { action: selectedAction as AuditLog['action'] }),
       ...(selectedResource && { resource: selectedResource }),
-      ...(dateRange.from && { startDate: format(dateRange.from, 'yyyy-MM-dd') }),
-      ...(dateRange.to && { endDate: format(dateRange.to, 'yyyy-MM-dd') }),
+      ...(dateRange?.from && { startDate: format(dateRange.from, 'yyyy-MM-dd') }),
+      ...(dateRange?.to && { endDate: format(dateRange.to, 'yyyy-MM-dd') }),
     };
     setFilters(newFilters);
     setCurrentPage(1);
@@ -222,11 +222,11 @@ const AuditTrailsPage = () => {
                     variant="outline"
                     className={cn(
                       "w-full justify-start text-left font-normal",
-                      !dateRange.from && "text-muted-foreground"
+                      !dateRange?.from && "text-muted-foreground"
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {dateRange.from ? (
+                    {dateRange?.from ? (
                       dateRange.to ? (
                         <>
                           {format(dateRange.from, "LLL dd")} -{" "}
@@ -244,7 +244,7 @@ const AuditTrailsPage = () => {
                   <Calendar
                     initialFocus
                     mode="range"
-                    defaultMonth={dateRange.from}
+                    defaultMonth={dateRange?.from}
                     selected={dateRange}
                     onSelect={setDateRange}
                     numberOfMonths={2}
