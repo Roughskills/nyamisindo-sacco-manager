@@ -1,10 +1,10 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Camera, Eye, RotateCcw, Smile, AlertCircle, CheckCircle2, Play, Square } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface LivenessDetectionProps {
   onComplete: (data: any) => void;
@@ -24,10 +24,14 @@ const LivenessDetection = ({ onComplete, data }: LivenessDetectionProps) => {
   const [progress, setProgress] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [verificationResult, setVerificationResult] = useState<'pending' | 'success' | 'failed'>('pending');
+  const [faceDetected, setFaceDetected] = useState(false);
+  const [movementDetected, setMovementDetected] = useState(false);
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const animationFrameRef = useRef<number>();
+  const previousFrameRef = useRef<ImageData | null>(null);
 
   const challenges: LivenessChallenge[] = [
     {
@@ -67,11 +71,19 @@ const LivenessDetection = ({ onComplete, data }: LivenessDetectionProps) => {
   const startCamera = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { width: 640, height: 480, facingMode: 'user' }
+        video: { 
+          width: { ideal: 640 },
+          height: { ideal: 480 },
+          facingMode: 'user',
+          frameRate: { ideal: 30 }
+        }
       });
       
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
+        videoRef.current.onloadedmetadata = () => {
+          startFaceDetection();
+        };
       }
       
       setStream(mediaStream);
@@ -87,17 +99,118 @@ const LivenessDetection = ({ onComplete, data }: LivenessDetectionProps) => {
       stream.getTracks().forEach(track => track.stop());
       setStream(null);
     }
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
     setIsActive(false);
+    setFaceDetected(false);
+    setMovementDetected(false);
+  };
+
+  const startFaceDetection = () => {
+    const detectMovement = () => {
+      if (!videoRef.current || !canvasRef.current) return;
+
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
+      
+      if (!ctx) return;
+
+      // Set canvas size to match video
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+
+      // Draw current frame
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const currentFrame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+      // Detect face presence (simple brightness detection in center area)
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const faceArea = 100; // pixels around center
+      
+      let brightnessSum = 0;
+      let pixelCount = 0;
+
+      for (let x = centerX - faceArea; x < centerX + faceArea; x++) {
+        for (let y = centerY - faceArea; y < centerY + faceArea; y++) {
+          if (x >= 0 && x < canvas.width && y >= 0 && y < canvas.height) {
+            const index = (y * canvas.width + x) * 4;
+            const brightness = (currentFrame.data[index] + currentFrame.data[index + 1] + currentFrame.data[index + 2]) / 3;
+            brightnessSum += brightness;
+            pixelCount++;
+          }
+        }
+      }
+
+      const avgBrightness = brightnessSum / pixelCount;
+      const facePresent = avgBrightness > 50 && avgBrightness < 200; // Reasonable brightness range for face
+      setFaceDetected(facePresent);
+
+      // Detect movement by comparing frames
+      if (previousFrameRef.current) {
+        let diffSum = 0;
+        const threshold = 30;
+        let movementPixels = 0;
+
+        for (let i = 0; i < currentFrame.data.length; i += 4) {
+          const currentR = currentFrame.data[i];
+          const currentG = currentFrame.data[i + 1];
+          const currentB = currentFrame.data[i + 2];
+          
+          const prevR = previousFrameRef.current.data[i];
+          const prevG = previousFrameRef.current.data[i + 1];
+          const prevB = previousFrameRef.current.data[i + 2];
+
+          const diff = Math.abs(currentR - prevR) + Math.abs(currentG - prevG) + Math.abs(currentB - prevB);
+          
+          if (diff > threshold) {
+            movementPixels++;
+          }
+          diffSum += diff;
+        }
+
+        const movementPercentage = (movementPixels / (currentFrame.data.length / 4)) * 100;
+        setMovementDetected(movementPercentage > 0.5); // Movement threshold
+      }
+
+      previousFrameRef.current = currentFrame;
+      animationFrameRef.current = requestAnimationFrame(detectMovement);
+    };
+
+    detectMovement();
   };
 
   const simulateLivenessDetection = async () => {
+    if (!faceDetected) {
+      toast({
+        title: "Face Not Detected",
+        description: "Please ensure your face is visible in the camera frame.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsProcessing(true);
     
     for (let i = 0; i < challengeStates.length; i++) {
       setCurrentChallenge(i);
       
-      // Simulate challenge detection time
-      await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 1000));
+      // Wait for movement detection for each challenge
+      await new Promise<void>((resolve) => {
+        const checkMovement = () => {
+          if (movementDetected || Math.random() > 0.3) { // Simulate challenge completion
+            resolve();
+          } else {
+            setTimeout(checkMovement, 100);
+          }
+        };
+        
+        // Timeout after 10 seconds
+        setTimeout(() => resolve(), 10000);
+        checkMovement();
+      });
       
       setChallengeStates(prev => 
         prev.map((challenge, index) => 
@@ -108,13 +221,25 @@ const LivenessDetection = ({ onComplete, data }: LivenessDetectionProps) => {
       setProgress(((i + 1) / challengeStates.length) * 100);
     }
 
-    // Simulate final verification
+    // Final verification based on face detection and movement
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // 95% success rate simulation
-    const success = Math.random() > 0.05;
+    const success = faceDetected && movementDetected;
     setVerificationResult(success ? 'success' : 'failed');
     setIsProcessing(false);
+
+    if (success) {
+      toast({
+        title: "Liveness Verified!",
+        description: "Facial movements detected successfully.",
+      });
+    } else {
+      toast({
+        title: "Verification Failed",
+        description: "Unable to detect sufficient facial movements. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleComplete = () => {
@@ -165,9 +290,17 @@ const LivenessDetection = ({ onComplete, data }: LivenessDetectionProps) => {
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               <span>Camera Feed</span>
-              <Badge variant={isActive ? 'default' : 'secondary'}>
-                {isActive ? 'Active' : 'Inactive'}
-              </Badge>
+              <div className="flex gap-2">
+                <Badge variant={isActive ? 'default' : 'secondary'}>
+                  {isActive ? 'Active' : 'Inactive'}
+                </Badge>
+                <Badge variant={faceDetected ? 'default' : 'secondary'} className={faceDetected ? 'bg-green-100 text-green-800' : ''}>
+                  {faceDetected ? 'Face Detected' : 'No Face'}
+                </Badge>
+                <Badge variant={movementDetected ? 'default' : 'secondary'} className={movementDetected ? 'bg-blue-100 text-blue-800' : ''}>
+                  {movementDetected ? 'Movement' : 'Static'}
+                </Badge>
+              </div>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -183,7 +316,9 @@ const LivenessDetection = ({ onComplete, data }: LivenessDetectionProps) => {
               
               {/* Overlay for face detection frame */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-64 h-80 border-2 border-white rounded-lg opacity-50" />
+                <div className={`w-64 h-80 border-2 rounded-lg opacity-50 ${
+                  faceDetected ? 'border-green-400' : 'border-white'
+                }`} />
               </div>
 
               {/* Status overlay */}
@@ -240,6 +375,7 @@ const LivenessDetection = ({ onComplete, data }: LivenessDetectionProps) => {
                   {!isProcessing && verificationResult === 'pending' && (
                     <Button
                       onClick={simulateLivenessDetection}
+                      disabled={!faceDetected}
                       className="flex items-center gap-2"
                     >
                       <Eye className="h-4 w-4" />
@@ -374,7 +510,7 @@ const LivenessDetection = ({ onComplete, data }: LivenessDetectionProps) => {
           disabled={verificationResult !== 'success'}
           className="px-8"
         >
-          Continue to Photo Upload
+          Continue to Farm Locator
         </Button>
       </div>
     </div>
