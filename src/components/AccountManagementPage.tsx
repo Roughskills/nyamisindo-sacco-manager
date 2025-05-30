@@ -60,6 +60,15 @@ const AccountManagementPage = () => {
     photos: {}
   });
 
+  // Track completion status of each step
+  const [stepCompletionStatus, setStepCompletionStatus] = useState({
+    'personal-info': false,
+    'kyc': false,
+    'id-verification': false,
+    'liveness': false,
+    'photo-upload': false
+  });
+
   // Mock existing members data
   const existingMembers: ExistingMember[] = [
     {
@@ -155,40 +164,50 @@ const AccountManagementPage = () => {
     }
   ];
 
+  const getStepStatus = (stepId: string): 'pending' | 'in-progress' | 'completed' | 'failed' => {
+    if (stepCompletionStatus[stepId as keyof typeof stepCompletionStatus]) {
+      return 'completed';
+    }
+    if (steps.findIndex(step => step.id === stepId) === activeStep) {
+      return 'in-progress';
+    }
+    return 'pending';
+  };
+
   const steps: RegistrationStep[] = [
     {
       id: 'personal-info',
       title: 'Personal Information',
       description: 'Basic account holder information',
-      status: 'completed',
+      status: getStepStatus('personal-info'),
       component: AccountRegistrationForm
     },
     {
       id: 'kyc',
       title: 'KYC Verification',
       description: 'Know Your Customer verification',
-      status: 'in-progress',
+      status: getStepStatus('kyc'),
       component: KYCVerification
     },
     {
       id: 'id-verification',
       title: 'ID Verification',
       description: 'Government ID document verification',
-      status: 'pending',
+      status: getStepStatus('id-verification'),
       component: IDVerification
     },
     {
       id: 'liveness',
       title: 'Liveness Detection',
       description: 'Biometric liveness verification',
-      status: 'pending',
+      status: getStepStatus('liveness'),
       component: LivenessDetection
     },
     {
       id: 'photo-upload',
       title: 'Photo Upload',
       description: 'Profile and supporting documents',
-      status: 'pending',
+      status: getStepStatus('photo-upload'),
       component: PhotoUpload
     }
   ];
@@ -234,9 +253,17 @@ const AccountManagementPage = () => {
 
   const handleStepComplete = (stepData: any) => {
     const currentStep = steps[activeStep];
+    
+    // Update registration data
     setRegistrationData(prev => ({
       ...prev,
       [currentStep.id.replace('-', '')]: stepData
+    }));
+    
+    // Mark current step as completed
+    setStepCompletionStatus(prev => ({
+      ...prev,
+      [currentStep.id]: true
     }));
     
     if (activeStep < steps.length - 1) {
@@ -307,7 +334,7 @@ const AccountManagementPage = () => {
                     className={`flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all ${
                       index === activeStep
                         ? 'border-blue-500 bg-blue-50'
-                        : index < activeStep
+                        : step.status === 'completed'
                         ? 'border-green-200 bg-green-50'
                         : 'border-gray-200 bg-gray-50'
                     }`}
