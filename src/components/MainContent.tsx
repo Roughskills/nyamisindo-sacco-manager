@@ -14,6 +14,7 @@ import ReportsPage from "./ReportsPage";
 import SystemAdminPage from "./SystemAdminPage";
 import SettingsPage from "./SettingsPage";
 import MemberEnrollmentPage from "./MemberEnrollmentPage";
+import AuditTrailsPage from "./AuditTrailsPage";
 
 interface MainContentProps {
   activeTab: string;
@@ -64,6 +65,9 @@ const MainContent = ({ activeTab }: MainContentProps) => {
     
     case "notifications":
       return <NotificationsPage />;
+    
+    case "audit":
+      return <AuditTrailsPage />;
     
     case "admin":
       return <SystemAdminPage />;

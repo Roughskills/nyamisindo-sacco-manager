@@ -8,6 +8,7 @@ export { paymentService } from './paymentService';
 export { loanService } from './loanService';
 export { reportService } from './reportService';
 export { notificationService } from './notificationService';
+export { auditService } from './auditService';
 
 // Export mock service for development
 export { mockApiService } from './mockApiService';
