@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -97,6 +98,18 @@ const KYCVerification = ({ onComplete, data }: KYCVerificationProps) => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  // Check if form is valid for enabling the submit button
+  const isFormValid = () => {
+    return formData.idType && 
+           formData.idNumber.trim() && 
+           formData.issueDate && 
+           formData.expiryDate && 
+           formData.bankingHistory && 
+           formData.riskAssessment && 
+           formData.amlScreening &&
+           Object.keys(errors).length === 0;
   };
 
   const simulateVerification = async () => {
@@ -369,10 +382,10 @@ const KYCVerification = ({ onComplete, data }: KYCVerificationProps) => {
         </Button>
         <Button 
           type="submit" 
-          disabled={isVerifying || !allVerified}
+          disabled={isVerifying || !isFormValid()}
           className="px-8"
         >
-          {isVerifying ? 'Verifying...' : 'Continue to ID Verification'}
+          {isVerifying ? 'Verifying...' : 'Complete KYC Verification'}
         </Button>
       </div>
     </form>
