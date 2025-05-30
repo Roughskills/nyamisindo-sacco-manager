@@ -381,11 +381,11 @@ const PersonalInformation = ({ onComplete, data }: PersonalInformationProps) => 
                   <SelectValue placeholder="Select income range" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="below-50000">Below 50,000 RWF</SelectItem>
-                  <SelectItem value="50000-100000">50,000 - 100,000 RWF</SelectItem>
-                  <SelectItem value="100000-200000">100,000 - 200,000 RWF</SelectItem>
-                  <SelectItem value="200000-500000">200,000 - 500,000 RWF</SelectItem>
-                  <SelectItem value="above-500000">Above 500,000 RWF</SelectItem>
+                  <SelectItem value="below-50000">Below 50,000 UGX</SelectItem>
+                  <SelectItem value="50000-100000">50,000 - 100,000 UGX</SelectItem>
+                  <SelectItem value="100000-200000">100,000 - 200,000 UGX</SelectItem>
+                  <SelectItem value="200000-500000">200,000 - 500,000 UGX</SelectItem>
+                  <SelectItem value="above-500000">Above 500,000 UGX</SelectItem>
                 </SelectContent>
               </Select>
             </div>
