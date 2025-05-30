@@ -164,11 +164,11 @@ const AccountManagementPage = () => {
     }
   ];
 
-  const getStepStatus = (stepId: string): 'pending' | 'in-progress' | 'completed' | 'failed' => {
+  const getStepStatus = (stepId: string, stepIndex: number): 'pending' | 'in-progress' | 'completed' | 'failed' => {
     if (stepCompletionStatus[stepId as keyof typeof stepCompletionStatus]) {
       return 'completed';
     }
-    if (steps.findIndex(step => step.id === stepId) === activeStep) {
+    if (stepIndex === activeStep) {
       return 'in-progress';
     }
     return 'pending';
@@ -179,35 +179,35 @@ const AccountManagementPage = () => {
       id: 'personal-info',
       title: 'Personal Information',
       description: 'Basic account holder information',
-      status: getStepStatus('personal-info'),
+      status: getStepStatus('personal-info', 0),
       component: AccountRegistrationForm
     },
     {
       id: 'kyc',
       title: 'KYC Verification',
       description: 'Know Your Customer verification',
-      status: getStepStatus('kyc'),
+      status: getStepStatus('kyc', 1),
       component: KYCVerification
     },
     {
       id: 'id-verification',
       title: 'ID Verification',
       description: 'Government ID document verification',
-      status: getStepStatus('id-verification'),
+      status: getStepStatus('id-verification', 2),
       component: IDVerification
     },
     {
       id: 'liveness',
       title: 'Liveness Detection',
       description: 'Biometric liveness verification',
-      status: getStepStatus('liveness'),
+      status: getStepStatus('liveness', 3),
       component: LivenessDetection
     },
     {
       id: 'photo-upload',
       title: 'Photo Upload',
       description: 'Profile and supporting documents',
-      status: getStepStatus('photo-upload'),
+      status: getStepStatus('photo-upload', 4),
       component: PhotoUpload
     }
   ];
