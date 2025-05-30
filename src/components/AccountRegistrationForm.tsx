@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,7 @@ import { CheckCircle2, Circle, Clock, User, Camera, MapPin, FileCheck, Upload } 
 import { useToast } from "@/hooks/use-toast";
 
 // Import step components
+import PersonalInformation from './PersonalInformation';
 import IDVerification from './IDVerification';
 import LivenessDetection from './LivenessDetection';
 import FarmLocator from './FarmLocator';
@@ -26,6 +26,7 @@ const AccountRegistrationForm = () => {
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
+    personalInformation: null,
     idVerification: null,
     livenessDetection: null,
     farmLocation: null,
@@ -38,6 +39,13 @@ const AccountRegistrationForm = () => {
   };
 
   const steps = [
+    {
+      id: 'personalInformation',
+      title: 'Personal Information',
+      description: 'Basic account holder information',
+      component: PersonalInformation,
+      status: getStepStatus('personalInformation')
+    },
     {
       id: 'idVerification',
       title: 'ID Verification',
@@ -181,11 +189,12 @@ const AccountRegistrationForm = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            {currentStep === 0 && <FileCheck className="h-5 w-5" />}
-            {currentStep === 1 && <Camera className="h-5 w-5" />}
-            {currentStep === 2 && <MapPin className="h-5 w-5" />}
-            {currentStep === 3 && <FileCheck className="h-5 w-5" />}
-            {currentStep === 4 && <Upload className="h-5 w-5" />}
+            {currentStep === 0 && <User className="h-5 w-5" />}
+            {currentStep === 1 && <FileCheck className="h-5 w-5" />}
+            {currentStep === 2 && <Camera className="h-5 w-5" />}
+            {currentStep === 3 && <MapPin className="h-5 w-5" />}
+            {currentStep === 4 && <FileCheck className="h-5 w-5" />}
+            {currentStep === 5 && <Upload className="h-5 w-5" />}
             {steps[currentStep].title}
             {steps[currentStep].status === 'completed' && (
               <CheckCircle2 className="h-5 w-5 text-green-500" />
