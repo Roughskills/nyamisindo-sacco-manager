@@ -19,6 +19,7 @@ interface LivenessChallenge {
 }
 
 const LivenessDetection = ({ onComplete, data }: LivenessDetectionProps) => {
+  const { toast } = useToast();
   const [isActive, setIsActive] = useState(false);
   const [currentChallenge, setCurrentChallenge] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -90,7 +91,11 @@ const LivenessDetection = ({ onComplete, data }: LivenessDetectionProps) => {
       setIsActive(true);
     } catch (error) {
       console.error('Error accessing camera:', error);
-      alert('Camera access is required for liveness detection. Please enable camera permissions.');
+      toast({
+        title: "Camera Access Required",
+        description: "Camera access is required for liveness detection. Please enable camera permissions.",
+        variant: "destructive"
+      });
     }
   };
 

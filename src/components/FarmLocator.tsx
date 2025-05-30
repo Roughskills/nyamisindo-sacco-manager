@@ -16,6 +16,13 @@ interface Coordinates {
   longitude: number;
 }
 
+// Declare global google variable for TypeScript
+declare global {
+  interface Window {
+    google: typeof google;
+  }
+}
+
 const FarmLocator = ({ onComplete, data }: FarmLocatorProps) => {
   const { toast } = useToast();
   const mapRef = useRef<HTMLDivElement>(null);
@@ -36,12 +43,12 @@ const FarmLocator = ({ onComplete, data }: FarmLocatorProps) => {
 
       const defaultCenter = { lat: -1.940278, lng: 29.873888 }; // Rwanda center
       
-      const map = new google.maps.Map(mapRef.current, {
+      const map = new window.google.maps.Map(mapRef.current, {
         zoom: 10,
         center: coordinates ? 
           { lat: coordinates.latitude, lng: coordinates.longitude } : 
           defaultCenter,
-        mapTypeId: google.maps.MapTypeId.SATELLITE,
+        mapTypeId: window.google.maps.MapTypeId.SATELLITE,
       });
 
       mapInstanceRef.current = map;
@@ -82,7 +89,7 @@ const FarmLocator = ({ onComplete, data }: FarmLocatorProps) => {
     return () => {
       // Cleanup
       if (mapInstanceRef.current) {
-        google.maps.event.clearInstanceListeners(mapInstanceRef.current);
+        window.google.maps.event.clearInstanceListeners(mapInstanceRef.current);
       }
     };
   }, []);
@@ -96,7 +103,7 @@ const FarmLocator = ({ onComplete, data }: FarmLocatorProps) => {
     }
 
     // Add new marker
-    const marker = new google.maps.Marker({
+    const marker = new window.google.maps.Marker({
       position: { lat, lng },
       map: mapInstanceRef.current,
       title: 'Farm Location',
@@ -122,7 +129,7 @@ const FarmLocator = ({ onComplete, data }: FarmLocatorProps) => {
 
   const reverseGeocode = async (lat: number, lng: number) => {
     try {
-      const geocoder = new google.maps.Geocoder();
+      const geocoder = new window.google.maps.Geocoder();
       const response = await geocoder.geocode({ 
         location: { lat, lng } 
       });
