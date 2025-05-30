@@ -8,7 +8,7 @@ export class PaymentService {
   }
 
   async getPaymentById(id: string): Promise<Payment> {
-    const response = await apiClient.get<Payment>(`/payments/${id}`);
+    const response = await apiClient.get<Payment>(`/payments/${id}`) as ApiResponse<Payment>;
     return response.data;
   }
 
@@ -53,7 +53,7 @@ export class PaymentService {
     byMethod: Record<string, { amount: number; count: number }>;
     byStatus: Record<string, { amount: number; count: number }>;
   }> {
-    const response = await apiClient.get<any>('/payments/stats', { startDate, endDate });
+    const response = await apiClient.get<any>('/payments/stats', { startDate, endDate }) as ApiResponse<any>;
     return response.data;
   }
 
@@ -67,7 +67,7 @@ export class PaymentService {
       reference: string;
     }>;
   }> {
-    const response = await apiClient.post<any>(`/payments/reconcile/${date}`);
+    const response = await apiClient.post<any>(`/payments/reconcile/${date}`) as ApiResponse<any>;
     return response.data;
   }
 }

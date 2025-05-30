@@ -37,7 +37,7 @@ export class AuthService {
   }
 
   async getCurrentUser(): Promise<User> {
-    const response = await apiClient.get<User>('/auth/me');
+    const response = await apiClient.get<User>('/auth/me') as ApiResponse<User>;
     return response.data;
   }
 

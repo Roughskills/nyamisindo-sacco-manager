@@ -8,7 +8,7 @@ export class MilkCollectionService {
   }
 
   async getCollectionById(id: string): Promise<MilkCollection> {
-    const response = await apiClient.get<MilkCollection>(`/milk-collections/${id}`);
+    const response = await apiClient.get<MilkCollection>(`/milk-collections/${id}`) as ApiResponse<MilkCollection>;
     return response.data;
   }
 
@@ -44,7 +44,7 @@ export class MilkCollectionService {
     const response = await apiClient.get<MilkCollection[]>('/milk-collections/date-range', {
       startDate,
       endDate
-    });
+    }) as ApiResponse<MilkCollection[]>;
     return response.data;
   }
 
@@ -54,7 +54,7 @@ export class MilkCollectionService {
     totalFarmers: number;
     totalAmount: number;
   }> {
-    const response = await apiClient.get<any>(`/milk-collections/daily-stats/${date}`);
+    const response = await apiClient.get<any>(`/milk-collections/daily-stats/${date}`) as ApiResponse<any>;
     return response.data;
   }
 
@@ -70,7 +70,7 @@ export class MilkCollectionService {
       farmers: number;
     }>;
   }> {
-    const response = await apiClient.get<any>(`/milk-collections/monthly-stats/${year}/${month}`);
+    const response = await apiClient.get<any>(`/milk-collections/monthly-stats/${year}/${month}`) as ApiResponse<any>;
     return response.data;
   }
 }

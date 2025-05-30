@@ -308,4 +308,6 @@ export interface QueryParams {
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
   filters?: Record<string, any>;
+  startDate?: string;
+  endDate?: string;
 }

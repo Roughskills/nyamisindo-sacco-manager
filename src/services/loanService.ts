@@ -8,7 +8,7 @@ export class LoanService {
   }
 
   async getLoanById(id: string): Promise<Loan> {
-    const response = await apiClient.get<Loan>(`/loans/${id}`);
+    const response = await apiClient.get<Loan>(`/loans/${id}`) as ApiResponse<Loan>;
     return response.data;
   }
 
@@ -42,7 +42,7 @@ export class LoanService {
   }
 
   async getRepaymentSchedule(loanId: string): Promise<LoanRepayment[]> {
-    const response = await apiClient.get<LoanRepayment[]>(`/loans/${loanId}/repayments`);
+    const response = await apiClient.get<LoanRepayment[]>(`/loans/${loanId}/repayments`) as ApiResponse<LoanRepayment[]>;
     return response.data;
   }
 
@@ -52,7 +52,7 @@ export class LoanService {
   }
 
   async getOverdueLoans(): Promise<Loan[]> {
-    const response = await apiClient.get<Loan[]>('/loans/overdue');
+    const response = await apiClient.get<Loan[]>('/loans/overdue') as ApiResponse<Loan[]>;
     return response.data;
   }
 
@@ -65,7 +65,7 @@ export class LoanService {
     overdueLoanAmount: number;
     defaultRate: number;
   }> {
-    const response = await apiClient.get<any>('/loans/stats');
+    const response = await apiClient.get<any>('/loans/stats') as ApiResponse<any>;
     return response.data;
   }
 
@@ -76,7 +76,7 @@ export class LoanService {
     creditScore: number;
     factors: string[];
   }> {
-    const response = await apiClient.get<any>(`/farmers/${farmerId}/loan-eligibility`);
+    const response = await apiClient.get<any>(`/farmers/${farmerId}/loan-eligibility`) as ApiResponse<any>;
     return response.data;
   }
 }

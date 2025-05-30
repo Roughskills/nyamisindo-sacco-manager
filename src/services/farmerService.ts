@@ -8,7 +8,7 @@ export class FarmerService {
   }
 
   async getFarmerById(id: string): Promise<Farmer> {
-    const response = await apiClient.get<Farmer>(`/farmers/${id}`);
+    const response = await apiClient.get<Farmer>(`/farmers/${id}`) as ApiResponse<Farmer>;
     return response.data;
   }
 
@@ -46,12 +46,12 @@ export class FarmerService {
   }
 
   async getFarmersByDistrict(district: string): Promise<Farmer[]> {
-    const response = await apiClient.get<Farmer[]>(`/farmers/by-district/${district}`);
+    const response = await apiClient.get<Farmer[]>(`/farmers/by-district/${district}`) as ApiResponse<Farmer[]>;
     return response.data;
   }
 
   async searchFarmers(query: string): Promise<Farmer[]> {
-    const response = await apiClient.get<Farmer[]>('/farmers/search', { search: query });
+    const response = await apiClient.get<Farmer[]>('/farmers/search', { search: query }) as ApiResponse<Farmer[]>;
     return response.data;
   }
 }

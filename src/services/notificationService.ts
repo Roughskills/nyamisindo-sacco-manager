@@ -8,7 +8,7 @@ export class NotificationService {
   }
 
   async getUnreadNotifications(): Promise<Notification[]> {
-    const response = await apiClient.get<Notification[]>('/notifications/unread');
+    const response = await apiClient.get<Notification[]>('/notifications/unread') as ApiResponse<Notification[]>;
     return response.data;
   }
 
@@ -49,7 +49,7 @@ export class NotificationService {
     byCategory: Record<string, number>;
     byPriority: Record<string, number>;
   }> {
-    const response = await apiClient.get<any>('/notifications/stats');
+    const response = await apiClient.get<any>('/notifications/stats') as ApiResponse<any>;
     return response.data;
   }
 }

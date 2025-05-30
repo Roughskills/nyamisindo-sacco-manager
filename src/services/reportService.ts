@@ -9,7 +9,7 @@ export class ReportService {
   }
 
   async getReportStatus(reportId: string): Promise<ReportResponse> {
-    const response = await apiClient.get<ReportResponse>(`/reports/${reportId}/status`);
+    const response = await apiClient.get<ReportResponse>(`/reports/${reportId}/status`) as ApiResponse<ReportResponse>;
     return response.data;
   }
 
@@ -26,7 +26,7 @@ export class ReportService {
   }
 
   async getAvailableReports(): Promise<ReportResponse[]> {
-    const response = await apiClient.get<ReportResponse[]>('/reports');
+    const response = await apiClient.get<ReportResponse[]>('/reports') as ApiResponse<ReportResponse[]>;
     return response.data;
   }
 

@@ -8,7 +8,7 @@ export class UserService {
   }
 
   async getUserById(id: string): Promise<User> {
-    const response = await apiClient.get<User>(`/users/${id}`);
+    const response = await apiClient.get<User>(`/users/${id}`) as ApiResponse<User>;
     return response.data;
   }
 
@@ -38,7 +38,7 @@ export class UserService {
 
   // Role management
   async getRoles(): Promise<Role[]> {
-    const response = await apiClient.get<Role[]>('/roles');
+    const response = await apiClient.get<Role[]>('/roles') as ApiResponse<Role[]>;
     return response.data;
   }
 
@@ -58,7 +58,7 @@ export class UserService {
 
   // Permission management
   async getPermissions(): Promise<Permission[]> {
-    const response = await apiClient.get<Permission[]>('/permissions');
+    const response = await apiClient.get<Permission[]>('/permissions') as ApiResponse<Permission[]>;
     return response.data;
   }
 
