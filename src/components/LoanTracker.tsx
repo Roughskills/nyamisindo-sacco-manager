@@ -1,10 +1,16 @@
-
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import NewLoanApplicationModal from "./NewLoanApplicationModal";
+import LoanDetailsModal from "./LoanDetailsModal";
 
 const LoanTracker = () => {
+  const [isNewLoanModalOpen, setIsNewLoanModalOpen] = useState(false);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [selectedLoan, setSelectedLoan] = useState(null);
+
   const loans = [
     {
       id: 1,
@@ -16,7 +22,10 @@ const LoanTracker = () => {
       paid: 135000,
       remaining: 365000,
       status: "active",
-      nextPayment: "2024-04-15"
+      nextPayment: "2024-04-15",
+      interestRate: 12.5,
+      termMonths: 12,
+      farmerId: "F-001"
     },
     {
       id: 2,
@@ -28,7 +37,10 @@ const LoanTracker = () => {
       paid: 90000,
       remaining: 210000,
       status: "active",
-      nextPayment: "2024-04-01"
+      nextPayment: "2024-04-01",
+      interestRate: 11.5,
+      termMonths: 10,
+      farmerId: "F-002"
     },
     {
       id: 3,
@@ -40,7 +52,10 @@ const LoanTracker = () => {
       paid: 375000,
       remaining: 375000,
       status: "active",
-      nextPayment: "2024-04-01"
+      nextPayment: "2024-04-01",
+      interestRate: 13.0,
+      termMonths: 12,
+      farmerId: "F-003"
     },
     {
       id: 4,
@@ -52,7 +67,10 @@ const LoanTracker = () => {
       paid: 20000,
       remaining: 180000,
       status: "overdue",
-      nextPayment: "2024-04-01"
+      nextPayment: "2024-04-01",
+      interestRate: 12.0,
+      termMonths: 10,
+      farmerId: "F-004"
     }
   ];
 
@@ -81,11 +99,21 @@ const LoanTracker = () => {
     }
   };
 
+  const handleViewDetails = (loan: any) => {
+    setSelectedLoan(loan);
+    setIsDetailsModalOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">Loan Management</h2>
-        <Button className="bg-green-600 hover:bg-green-700">New Loan Application</Button>
+        <Button 
+          className="bg-green-600 hover:bg-green-700"
+          onClick={() => setIsNewLoanModalOpen(true)}
+        >
+          New Loan Application
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -166,7 +194,13 @@ const LoanTracker = () => {
                   Next Payment: <span className="font-medium">{loan.nextPayment}</span>
                 </p>
                 <div className="space-x-2">
-                  <Button variant="outline" size="sm">View Details</Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleViewDetails(loan)}
+                  >
+                    View Details
+                  </Button>
                   <Button size="sm" className="bg-green-600 hover:bg-green-700">Record Payment</Button>
                 </div>
               </div>
@@ -174,6 +208,18 @@ const LoanTracker = () => {
           </Card>
         ))}
       </div>
+
+      {/* Modals */}
+      <NewLoanApplicationModal 
+        isOpen={isNewLoanModalOpen}
+        onClose={() => setIsNewLoanModalOpen(false)}
+      />
+      
+      <LoanDetailsModal 
+        isOpen={isDetailsModalOpen}
+        onClose={() => setIsDetailsModalOpen(false)}
+        loan={selectedLoan}
+      />
     </div>
   );
 };
