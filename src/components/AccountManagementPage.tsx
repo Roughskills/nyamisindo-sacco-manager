@@ -321,43 +321,6 @@ const AccountManagementPage = () => {
         </TabsList>
 
         <TabsContent value="registration" className="space-y-6">
-          {/* Progress Steps */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Account Registration Progress</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {steps.map((step, index) => (
-                  <div
-                    key={step.id}
-                    className={`flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                      index === activeStep
-                        ? 'border-blue-500 bg-blue-50'
-                        : step.status === 'completed'
-                        ? 'border-green-200 bg-green-50'
-                        : 'border-gray-200 bg-gray-50'
-                    }`}
-                    onClick={() => index <= activeStep && setActiveStep(index)}
-                  >
-                    <div className="flex items-center space-x-4 flex-1">
-                      <div className="flex-shrink-0">
-                        {getStatusIcon(step.status)}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-medium text-gray-900">{step.title}</h3>
-                        <p className="text-sm text-gray-600">{step.description}</p>
-                      </div>
-                      <Badge className={getStatusColor(step.status)}>
-                        {step.status.charAt(0).toUpperCase() + step.status.slice(1).replace('-', ' ')}
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
           {/* Current Step Content */}
           <Card>
             <CardHeader>
