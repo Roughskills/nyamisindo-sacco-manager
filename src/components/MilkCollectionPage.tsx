@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Plus, Users, TrendingUp, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import AddCollectionModal from "./AddCollectionModal";
+import EditCollectionModal from "./EditCollectionModal";
+import DeleteCollectionModal from "./DeleteCollectionModal";
 
 interface Farmer {
   id: number;
@@ -16,7 +18,7 @@ interface Farmer {
   quality: "High" | "Medium" | "Low";
 }
 
-const farmersData: Farmer[] = [
+const initialFarmersData: Farmer[] = [
   {
     id: 1,
     name: "John Doe",
@@ -56,6 +58,7 @@ const farmersData: Farmer[] = [
 
 const MilkCollectionPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [farmersData, setFarmersData] = useState<Farmer[]>(initialFarmersData);
   const { toast } = useToast();
 
   const filteredFarmers = farmersData.filter((farmer) =>
@@ -67,6 +70,20 @@ const MilkCollectionPage = () => {
       title: "Milk Submission",
       description: "Successfully recorded milk submission!",
     });
+  };
+
+  const handleUpdateFarmer = (updatedFarmer: Farmer) => {
+    setFarmersData(prevData => 
+      prevData.map(farmer => 
+        farmer.id === updatedFarmer.id ? updatedFarmer : farmer
+      )
+    );
+  };
+
+  const handleDeleteFarmer = (farmerId: number) => {
+    setFarmersData(prevData => 
+      prevData.filter(farmer => farmer.id !== farmerId)
+    );
   };
 
   return (
@@ -111,8 +128,8 @@ const MilkCollectionPage = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {farmersData.reduce((acc, farmer) => acc + farmer.milkProduction, 0) /
-                farmersData.length}
+              {(farmersData.reduce((acc, farmer) => acc + farmer.milkProduction, 0) /
+                farmersData.length).toFixed(1)}
               L
             </div>
             <p className="text-sm text-gray-500">Per day</p>
@@ -192,7 +209,15 @@ const MilkCollectionPage = () => {
                     {farmer.quality}
                   </Badge>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                  <EditCollectionModal 
+                    farmer={farmer}
+                    onUpdate={handleUpdateFarmer}
+                  />
+                  <DeleteCollectionModal 
+                    farmer={farmer}
+                    onDelete={handleDeleteFarmer}
+                  />
                   <Button
                     variant="outline"
                     onClick={handleSubmission}
