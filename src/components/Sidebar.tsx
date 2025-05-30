@@ -17,7 +17,8 @@ import {
   User,
   UserPlus,
   Bell,
-  Droplets
+  Droplets,
+  Shield
 } from "lucide-react";
 
 interface SidebarProps {
@@ -40,6 +41,7 @@ const Sidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
     { id: "registration", label: "Member Enrollment", icon: UserPlus },
     { id: "reports", label: "Reports", icon: FileText },
     { id: "notifications", label: "Notifications & Messages", icon: Bell },
+    { id: "audit", label: "Audit Trails", icon: Shield },
     { id: "admin", label: "System Admin", icon: Settings },
     { id: "settings", label: "Settings", icon: Settings },
   ];
