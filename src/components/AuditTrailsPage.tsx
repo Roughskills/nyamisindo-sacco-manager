@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,8 +22,8 @@ const AuditTrailsPage = () => {
   const [filters, setFilters] = useState<AuditLogFilters>({});
   const [searchTerm, setSearchTerm] = useState('');
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
-  const [selectedAction, setSelectedAction] = useState<string>('');
-  const [selectedResource, setSelectedResource] = useState<string>('');
+  const [selectedAction, setSelectedAction] = useState<string>('all');
+  const [selectedResource, setSelectedResource] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(20);
 
@@ -43,8 +44,8 @@ const AuditTrailsPage = () => {
 
   const handleFilterChange = () => {
     const newFilters: AuditLogFilters = {
-      ...(selectedAction && { action: selectedAction as AuditLog['action'] }),
-      ...(selectedResource && { resource: selectedResource }),
+      ...(selectedAction !== 'all' && { action: selectedAction as AuditLog['action'] }),
+      ...(selectedResource !== 'all' && { resource: selectedResource }),
       ...(dateRange?.from && { startDate: format(dateRange.from, 'yyyy-MM-dd') }),
       ...(dateRange?.to && { endDate: format(dateRange.to, 'yyyy-MM-dd') }),
     };
@@ -183,7 +184,7 @@ const AuditTrailsPage = () => {
                   <SelectValue placeholder="All actions" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All actions</SelectItem>
+                  <SelectItem value="all">All actions</SelectItem>
                   <SelectItem value="CREATE">Create</SelectItem>
                   <SelectItem value="UPDATE">Update</SelectItem>
                   <SelectItem value="DELETE">Delete</SelectItem>
@@ -203,7 +204,7 @@ const AuditTrailsPage = () => {
                   <SelectValue placeholder="All resources" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All resources</SelectItem>
+                  <SelectItem value="all">All resources</SelectItem>
                   <SelectItem value="user">User</SelectItem>
                   <SelectItem value="farmer">Farmer</SelectItem>
                   <SelectItem value="milk-collection">Milk Collection</SelectItem>
