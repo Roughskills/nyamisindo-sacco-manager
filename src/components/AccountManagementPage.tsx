@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -51,6 +50,7 @@ const AccountManagementPage = () => {
   const [accountSearchTerm, setAccountSearchTerm] = useState('');
   const [selectedMember, setSelectedMember] = useState<ExistingMember | null>(null);
   const [viewMode, setViewMode] = useState<'profile' | 'savings' | 'loan'>('profile');
+  const [isRegistrationCompleted, setIsRegistrationCompleted] = useState(false);
   
   const [registrationData, setRegistrationData] = useState({
     personalInfo: {},
@@ -241,6 +241,9 @@ const AccountManagementPage = () => {
     
     if (activeStep < steps.length - 1) {
       setActiveStep(activeStep + 1);
+    } else {
+      // Registration is completed when all steps are done
+      setIsRegistrationCompleted(true);
     }
   };
 
@@ -261,9 +264,16 @@ const AccountManagementPage = () => {
           <h1 className="text-3xl font-bold text-gray-900">Account Management</h1>
           <p className="text-gray-600 mt-2">Manage member savings accounts and registration process</p>
         </div>
-        <Badge variant="outline" className="px-3 py-1">
+        <Badge 
+          variant="outline" 
+          className={`px-3 py-1 ${
+            isRegistrationCompleted 
+              ? 'bg-green-100 text-green-800 border-green-300' 
+              : 'bg-gray-100 text-gray-800 border-gray-300'
+          }`}
+        >
           <Shield className="h-4 w-4 mr-2" />
-          Secure Registration
+          {isRegistrationCompleted ? 'Registration Secured' : 'Secure Registration'}
         </Badge>
       </div>
 
