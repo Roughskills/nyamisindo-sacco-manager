@@ -1,5 +1,6 @@
 
-import { BarChart3, Users, Milk, User, UserPlus, Bell, MessageSquare, Droplets } from "lucide-react";
+
+import { BarChart3, Users, Milk, User, UserPlus, Bell, MessageSquare, Droplets, Shield } from "lucide-react";
 
 interface MainHeaderProps {
   activeTab: string;
@@ -30,6 +31,8 @@ const MainHeader = ({ activeTab }: MainHeaderProps) => {
         return <Bell className="w-8 h-8 text-yellow-600" />;
       case "messages":
         return <MessageSquare className="w-8 h-8 text-blue-600" />;
+      case "audit":
+        return <Shield className="w-8 h-8 text-red-600" />;
       case "admin":
         return <Users className="w-8 h-8 text-red-600" />;
       case "settings":
@@ -63,6 +66,8 @@ const MainHeader = ({ activeTab }: MainHeaderProps) => {
         return "Notifications & Messages";
       case "messages":
         return "Messages";
+      case "audit":
+        return "Audit Trail Overview";
       case "admin":
         return "System Admin";
       case "settings":
@@ -96,6 +101,8 @@ const MainHeader = ({ activeTab }: MainHeaderProps) => {
         return "Manage system notifications and alerts";
       case "messages":
         return "Internal messaging system";
+      case "audit":
+        return "Monitoring user behaviours";
       case "admin":
         return "System administration and management";
       case "settings":
@@ -114,3 +121,4 @@ const MainHeader = ({ activeTab }: MainHeaderProps) => {
 };
 
 export default MainHeader;
+
