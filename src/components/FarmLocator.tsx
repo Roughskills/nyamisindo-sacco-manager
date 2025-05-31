@@ -24,6 +24,8 @@ declare global {
 }
 
 const FarmLocator = ({ onComplete, data }: FarmLocatorProps) => {
+  console.log('FarmLocator component rendering...');
+  
   const { toast } = useToast();
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<google.maps.Map | null>(null);
@@ -36,53 +38,73 @@ const FarmLocator = ({ onComplete, data }: FarmLocatorProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [mapReady, setMapReady] = useState(false);
 
+  console.log('FarmLocator state:', { coordinates, address, isLoading, mapReady });
+
   // Initialize Google Maps
   useEffect(() => {
+    console.log('FarmLocator useEffect running...');
+    
     const initMap = () => {
-      if (!mapRef.current) return;
+      console.log('Initializing map...');
+      if (!mapRef.current) {
+        console.log('Map ref not available');
+        return;
+      }
 
       const defaultCenter = { lat: 1.3733, lng: 32.2903 }; // Uganda center
       
-      const map = new window.google.maps.Map(mapRef.current, {
-        zoom: 10,
-        center: coordinates ? 
-          { lat: coordinates.latitude, lng: coordinates.longitude } : 
-          defaultCenter,
-        mapTypeId: window.google.maps.MapTypeId.SATELLITE,
-      });
+      try {
+        const map = new window.google.maps.Map(mapRef.current, {
+          zoom: 10,
+          center: coordinates ? 
+            { lat: coordinates.latitude, lng: coordinates.longitude } : 
+            defaultCenter,
+          mapTypeId: window.google.maps.MapTypeId.SATELLITE,
+        });
 
-      mapInstanceRef.current = map;
+        mapInstanceRef.current = map;
 
-      // Add click listener to map
-      map.addListener('click', (event: google.maps.MapMouseEvent) => {
-        if (event.latLng) {
-          const lat = event.latLng.lat();
-          const lng = event.latLng.lng();
-          
-          setCoordinates({ latitude: lat, longitude: lng });
-          updateMarker(lat, lng);
-          reverseGeocode(lat, lng);
+        // Add click listener to map
+        map.addListener('click', (event: google.maps.MapMouseEvent) => {
+          if (event.latLng) {
+            const lat = event.latLng.lat();
+            const lng = event.latLng.lng();
+            
+            setCoordinates({ latitude: lat, longitude: lng });
+            updateMarker(lat, lng);
+            reverseGeocode(lat, lng);
+          }
+        });
+
+        // Add existing marker if coordinates exist
+        if (coordinates) {
+          updateMarker(coordinates.latitude, coordinates.longitude);
         }
-      });
 
-      // Add existing marker if coordinates exist
-      if (coordinates) {
-        updateMarker(coordinates.latitude, coordinates.longitude);
+        setMapReady(true);
+        setIsLoading(false);
+        console.log('Map initialized successfully');
+      } catch (error) {
+        console.error('Error initializing map:', error);
+        setIsLoading(false);
       }
-
-      setMapReady(true);
-      setIsLoading(false);
     };
 
     // Load Google Maps API
     if (!window.google) {
+      console.log('Loading Google Maps API...');
       const script = document.createElement('script');
       script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places`;
       script.async = true;
       script.defer = true;
       script.onload = initMap;
+      script.onerror = (error) => {
+        console.error('Error loading Google Maps API:', error);
+        setIsLoading(false);
+      };
       document.head.appendChild(script);
     } else {
+      console.log('Google Maps API already loaded');
       initMap();
     }
 
@@ -224,6 +246,8 @@ const FarmLocator = ({ onComplete, data }: FarmLocatorProps) => {
       description: "Farm location has been successfully recorded.",
     });
   };
+
+  console.log('FarmLocator rendering UI...');
 
   return (
     <div className="space-y-6">
