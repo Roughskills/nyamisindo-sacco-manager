@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -41,7 +40,7 @@ const FarmLocator = ({ onComplete, data }: FarmLocatorProps) => {
     const initMap = () => {
       if (!mapRef.current) return;
 
-      const defaultCenter = { lat: -1.940278, lng: 29.873888 }; // Rwanda center
+      const defaultCenter = { lat: 1.3733, lng: 32.2903 }; // Uganda center
       
       const map = new window.google.maps.Map(mapRef.current, {
         zoom: 10,
