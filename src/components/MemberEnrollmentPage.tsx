@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -404,7 +405,7 @@ const MemberEnrollmentPage = () => {
                         <div>
                           <p className="font-medium">{member.accountNumber || 'Pending'}</p>
                           <p className="text-sm text-gray-500">
-                            Initial: {member.initialDeposit.toLocaleString()} RWF
+                            Initial: {member.initialDeposit.toLocaleString()} UGX
                           </p>
                         </div>
                       </TableCell>
@@ -500,7 +501,7 @@ const MemberEnrollmentPage = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="initialDeposit">Initial Deposit (RWF)</Label>
+                  <Label htmlFor="initialDeposit">Initial Deposit (UGX)</Label>
                   <Input
                     id="initialDeposit"
                     type="number"
@@ -659,7 +660,7 @@ const MemberEnrollmentPage = () => {
                           <div className="space-y-1 text-sm">
                             <p><span className="text-gray-600">Type:</span> {member.membershipType}</p>
                             <p><span className="text-gray-600">Date of Birth:</span> {member.dateOfBirth}</p>
-                            <p><span className="text-gray-600">Initial Deposit:</span> {member.initialDeposit.toLocaleString()} RWF</p>
+                            <p><span className="text-gray-600">Initial Deposit:</span> {member.initialDeposit.toLocaleString()} UGX</p>
                           </div>
                         </div>
 
