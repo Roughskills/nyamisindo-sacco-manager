@@ -4,11 +4,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import AddUserModal from './AddUserModal';
 import EditRoleModal from './EditRoleModal';
 import ConfigurationModal from './ConfigurationModal';
+import EditUserModal from './EditUserModal';
 import { 
   Users, 
   Shield, 
@@ -23,7 +24,6 @@ import {
   Search,
   Plus,
   Edit,
-  Trash2,
   Lock,
   Unlock
 } from 'lucide-react';
@@ -33,9 +33,10 @@ interface User {
   name: string;
   email: string;
   role: string;
-  status: 'active' | 'inactive' | 'suspended';
+  status: 'active' | 'inactive' | 'suspended' | 'locked';
   lastLogin: string;
   permissions: string[];
+  profileImage?: string;
 }
 
 interface UserSession {
@@ -52,15 +53,17 @@ const SystemAdminPage = () => {
   const [activeTab, setActiveTab] = useState('user-management');
   const [searchTerm, setSearchTerm] = useState('');
   const [addUserOpen, setAddUserOpen] = useState(false);
+  const [editUserOpen, setEditUserOpen] = useState(false);
   const [editRoleOpen, setEditRoleOpen] = useState(false);
   const [configOpen, setConfigOpen] = useState(false);
   const [configType, setConfigType] = useState('');
   const [configTitle, setConfigTitle] = useState('');
   const [selectedRole, setSelectedRole] = useState<any>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const { toast } = useToast();
 
   // Mock data
-  const users: User[] = [
+  const [users, setUsers] = useState<User[]>([
     {
       id: '1',
       name: 'John Doe',
@@ -68,7 +71,8 @@ const SystemAdminPage = () => {
       role: 'Administrator',
       status: 'active',
       lastLogin: '2024-01-15 09:30 AM',
-      permissions: ['full_access', 'user_management', 'system_config']
+      permissions: ['full_access', 'user_management', 'system_config'],
+      profileImage: '/lovable-uploads/32cc625f-c0ad-42ea-ade9-1bf9d73d9ed0.png'
     },
     {
       id: '2',
@@ -77,7 +81,8 @@ const SystemAdminPage = () => {
       role: 'Manager',
       status: 'active',
       lastLogin: '2024-01-15 08:45 AM',
-      permissions: ['member_management', 'reports', 'payments']
+      permissions: ['member_management', 'reports', 'payments'],
+      profileImage: '/lovable-uploads/39bf3300-da67-4e46-aa6e-89ee8efaba00.png'
     },
     {
       id: '3',
@@ -86,9 +91,10 @@ const SystemAdminPage = () => {
       role: 'Operator',
       status: 'inactive',
       lastLogin: '2024-01-14 05:20 PM',
-      permissions: ['basic_access', 'data_entry']
+      permissions: ['basic_access', 'data_entry'],
+      profileImage: '/lovable-uploads/4f5c5c7a-a091-4327-a01f-8a9ed50b0e17.png'
     }
-  ];
+  ]);
 
   const userSessions: UserSession[] = [
     {
@@ -139,9 +145,17 @@ const SystemAdminPage = () => {
       active: 'bg-green-100 text-green-800',
       inactive: 'bg-gray-100 text-gray-800',
       suspended: 'bg-red-100 text-red-800',
+      locked: 'bg-yellow-100 text-yellow-800',
       idle: 'bg-yellow-100 text-yellow-800'
     };
     return variants[status as keyof typeof variants] || variants.inactive;
+  };
+
+  const getUserRowBackground = (status: string) => {
+    if (status === 'locked') {
+      return 'bg-red-50 border-red-200';
+    }
+    return '';
   };
 
   const handleUserAction = (action: string, userId?: string) => {
@@ -149,6 +163,25 @@ const SystemAdminPage = () => {
       title: "Action Performed",
       description: `${action} action has been executed${userId ? ` for user ${userId}` : ''}`,
     });
+  };
+
+  const handleEditUser = (user: User) => {
+    setSelectedUser(user);
+    setEditUserOpen(true);
+  };
+
+  const handleLockUnlockUser = (userId: string) => {
+    setUsers(prevUsers => prevUsers.map(user => {
+      if (user.id === userId) {
+        const newStatus = user.status === 'locked' ? 'active' : 'locked';
+        toast({
+          title: newStatus === 'locked' ? "User Locked" : "User Unlocked",
+          description: `User ${user.name} has been ${newStatus === 'locked' ? 'locked' : 'unlocked'}`,
+        });
+        return { ...user, status: newStatus };
+      }
+      return user;
+    }));
   };
 
   const handleRoleEdit = (role: any) => {
@@ -228,9 +261,10 @@ const SystemAdminPage = () => {
               </div>
               <div className="space-y-4">
                 {users.map((user) => (
-                  <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div key={user.id} className={`flex items-center justify-between p-4 border rounded-lg transition-colors ${getUserRowBackground(user.status)}`}>
                     <div className="flex items-center space-x-4">
-                      <Avatar>
+                      <Avatar className="h-12 w-12">
+                        <AvatarImage src={user.profileImage} alt={user.name} />
                         <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <div>
@@ -245,11 +279,16 @@ const SystemAdminPage = () => {
                       </Badge>
                       <Badge variant="outline">{user.role}</Badge>
                       <div className="flex space-x-1">
-                        <Button variant="ghost" size="sm" onClick={() => handleUserAction('Edit', user.id)}>
+                        <Button variant="ghost" size="sm" onClick={() => handleEditUser(user)}>
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="sm" onClick={() => handleUserAction('Delete', user.id)}>
-                          <Trash2 className="h-4 w-4" />
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => handleLockUnlockUser(user.id)}
+                          className={user.status === 'locked' ? 'text-red-600 hover:text-red-700' : 'text-gray-600 hover:text-gray-700'}
+                        >
+                          {user.status === 'locked' ? <Unlock className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
                         </Button>
                       </div>
                     </div>
@@ -535,6 +574,16 @@ const SystemAdminPage = () => {
 
       {/* Modals */}
       <AddUserModal open={addUserOpen} onOpenChange={setAddUserOpen} />
+      <EditUserModal 
+        open={editUserOpen} 
+        onOpenChange={setEditUserOpen} 
+        user={selectedUser}
+        onUserUpdate={(updatedUser) => {
+          setUsers(prevUsers => prevUsers.map(user => 
+            user.id === updatedUser.id ? updatedUser : user
+          ));
+        }}
+      />
       <EditRoleModal open={editRoleOpen} onOpenChange={setEditRoleOpen} role={selectedRole} />
       <ConfigurationModal 
         open={configOpen} 
