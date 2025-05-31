@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -195,7 +196,7 @@ const FarmLocator = ({ onComplete, data }: FarmLocatorProps) => {
     }
     
     if (mapInstanceRef.current) {
-      mapInstanceRef.current.setCenter({ lat: -1.940278, lng: 29.873888 });
+      mapInstanceRef.current.setCenter({ lat: 1.3733, lng: 32.2903 });
       mapInstanceRef.current.setZoom(10);
     }
   };
